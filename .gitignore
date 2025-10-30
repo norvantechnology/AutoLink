@@ -6,6 +6,8 @@ node_modules/
 .env
 .env.local
 .env.*.local
+!.env.example
+!backend/.env.example
 
 # Google Cloud credentials
 *.json
