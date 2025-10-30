@@ -1,0 +1,55 @@
+{
+  "layout": {
+    "wrapper": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;\"><div style=\"background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">{content}</div><p style=\"text-align: center; color: #999; font-size: 12px; margin-top: 20px;\">© {year} AutoLink. All rights reserved.</p></div>",
+    
+    "button": "<a href=\"{url}\" style=\"display: inline-block; padding: 14px 28px; background-color: #0077b5; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold;\">{text}</a>",
+    
+    "otpBox": "<div style=\"background-color: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;\"><p style=\"margin: 0; color: #666; font-size: 14px;\">Your verification code:</p><h1 style=\"margin: 10px 0; color: #0077b5; font-size: 36px; letter-spacing: 8px; font-family: 'Courier New', monospace;\">{otp}</h1><p style=\"margin: 0; color: #999; font-size: 12px;\">This code expires in 10 minutes</p></div>"
+  },
+
+  "otpVerification": {
+    "subject": "Verify Your Email - AutoLink",
+    "content": "<h2 style=\"color: #0077b5; margin-bottom: 20px;\">Welcome to AutoLink!</h2><p style=\"color: #333; line-height: 1.6;\">Hi {name},</p><p style=\"color: #333; line-height: 1.6;\">Thank you for signing up! Please verify your email address using the code below:</p>{otpBox}<p style=\"color: #666; font-size: 14px; line-height: 1.6;\">Enter this code on the verification page to activate your account.</p><p style=\"color: #999; font-size: 12px; margin-top: 30px;\">If you didn't create an account, please ignore this email.</p>"
+  },
+
+  "emailVerification": {
+    "subject": "Verify Your Email - AutoLink",
+    "content": "<h2 style=\"color: #0077b5;\">Welcome to AutoLink!</h2><p>Thank you for signing up. Please verify your email address by clicking the button below:</p>{button}<p>Or copy and paste this link in your browser:</p><p style=\"color: #666; word-break: break-all; font-size: 12px;\">{verificationUrl}</p><p style=\"color: #999; font-size: 12px; margin-top: 30px;\">If you didn't create an account, please ignore this email.</p>"
+  },
+
+  "welcome": {
+    "subject": "Welcome to AutoLink! 🎉",
+    "content": "<h2 style=\"color: #0077b5;\">Welcome to AutoLink! 🎉</h2><p>Hi {name},</p><p>Your email has been verified successfully!</p><p>You can now:</p><ul style=\"color: #333; line-height: 1.8;\"><li>✅ Connect your LinkedIn account</li><li>✅ Create content topics</li><li>✅ Set up automated posting</li><li>✅ Generate AI-powered content</li></ul>{button}<p style=\"color: #666; margin-top: 20px;\">Need help getting started? Check out our guides or contact support.</p>"
+  },
+
+  "passwordReset": {
+    "subject": "Password Reset Request - AutoLink",
+    "content": "<h2 style=\"color: #0077b5;\">Password Reset Request</h2><p>You requested to reset your password. Click the button below to proceed:</p>{button}<p>Or copy and paste this link in your browser:</p><p style=\"color: #666; word-break: break-all; font-size: 12px;\">{resetUrl}</p><p style=\"color: #999; font-size: 12px; margin-top: 30px;\">This link will expire in 1 hour. If you didn't request this, please ignore this email.</p>"
+  },
+
+  "subscriptionConfirmation": {
+    "subject": "Subscription Activated - AutoLink",
+    "content": "<h2 style=\"color: #0077b5;\">Subscription Confirmed! 🎉</h2><p>Your {planType} plan subscription has been activated.</p><div style=\"background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\"><h3 style=\"color: #333; margin-top: 0;\">Plan Details:</h3><p style=\"margin: 5px 0;\"><strong>Plan:</strong> {planName}</p><p style=\"margin: 5px 0;\"><strong>Posts per day:</strong> {postsPerDay}</p><p style=\"margin: 5px 0;\"><strong>Amount:</strong> {currencySymbol}{amount}</p></div>{button}<p style=\"color: #666; font-size: 14px;\">Thank you for choosing AutoLink!</p>"
+  },
+
+  "paymentVerification": {
+    "subject": "Payment Verification Pending - AutoLink",
+    "content": "<h2 style=\"color: #0077b5;\">Payment Received!</h2><p>Hi {name},</p><p>We've received your payment for the <strong>{planType} plan</strong>.</p><div style=\"background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;\"><p style=\"margin: 0; color: #856404;\">⏳ <strong>Verification in Progress</strong></p><p style=\"margin: 5px 0 0 0; color: #856404; font-size: 14px;\">Our team is verifying your payment. You'll be notified once approved (usually within 24 hours).</p></div><p style=\"color: #666;\">Transaction ID: <strong>{transactionId}</strong></p><p style=\"color: #666; font-size: 14px;\">Thank you for your patience!</p>"
+  },
+
+  "paymentApproved": {
+    "subject": "Payment Verified - Subscription Active! 🎉",
+    "content": "<h2 style=\"color: #0077b5;\">Payment Verified! 🎉</h2><p>Hi {name},</p><p>Great news! Your payment has been verified and your subscription is now <strong style=\"color: #10b981;\">ACTIVE</strong>.</p><div style=\"background-color: #d1fae5; border-left: 4px solid: #10b981; padding: 15px; margin: 20px 0;\"><p style=\"margin: 0; color: #065f46;\">✅ <strong>Subscription Active</strong></p><p style=\"margin: 5px 0 0 0; color: #065f46; font-size: 14px;\">Your AutoLink automation is now running!</p></div><div style=\"background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\"><h3 style=\"color: #333; margin-top: 0;\">Your Plan:</h3><p style=\"margin: 5px 0;\"><strong>Plan:</strong> {planName}</p><p style=\"margin: 5px 0;\"><strong>Posts per day:</strong> {postsPerDay}</p><p style=\"margin: 5px 0;\"><strong>Valid until:</strong> {endDate}</p></div>{button}<p style=\"color: #666; font-size: 14px;\">Start creating amazing LinkedIn content today!</p>"
+  },
+
+  "postPublished": {
+    "subject": "Your LinkedIn Post is Live! 🚀",
+    "content": "<h2 style=\"color: #0077b5;\">Post Published Successfully! 🚀</h2><p>Hi {name},</p><p>Your scheduled post has been published to LinkedIn!</p><div style=\"background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\"><p style=\"margin: 5px 0;\"><strong>Topic:</strong> {topic}</p><p style=\"margin: 5px 0;\"><strong>Published at:</strong> {publishTime}</p></div>{button}<p style=\"color: #666; font-size: 14px;\">Track engagement from your dashboard.</p>"
+  },
+
+  "dailyReport": {
+    "subject": "Your Daily AutoLink Report 📊",
+    "content": "<h2 style=\"color: #0077b5;\">Daily Report 📊</h2><p>Hi {name},</p><p>Here's your AutoLink activity for today:</p><div style=\"background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\"><h3 style=\"color: #333; margin-top: 0;\">Today's Stats:</h3><p style=\"margin: 5px 0;\">📝 Posts generated: <strong>{postsGenerated}</strong></p><p style=\"margin: 5px 0;\">🚀 Posts published: <strong>{postsPublished}</strong></p><p style=\"margin: 5px 0;\">❤️ Total likes: <strong>{totalLikes}</strong></p><p style=\"margin: 5px 0;\">💬 Total comments: <strong>{totalComments}</strong></p></div>{button}"
+  }
+}
+

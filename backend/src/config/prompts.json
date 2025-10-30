@@ -1,0 +1,117 @@
+{
+  "postGeneration": {
+    "toneDescriptions": {
+      "professional": "professional but easy to understand",
+      "casual": "casual and friendly, like talking to a friend",
+      "inspirational": "inspiring and motivating in simple words",
+      "educational": "teaching in a simple, clear way",
+      "humorous": "fun and engaging with simple language"
+    },
+    "template": "Create a SHORT, ATTENTION-GRABBING LinkedIn post about \"{topicName}\".\n\n{context}{keywords}{previousPosts}\n\nIMPORTANT: The IMAGE will contain the MAIN content. Your text should be a HOOK that makes people STOP scrolling and look at the image.\n\nRequirements:\n- MAXIMUM 80-100 words (SHORT!)\n- Start with a POWERFUL hook (question, stat, bold statement)\n- {tone} tone\n- Use 1-2 emojis maximum\n- End with \"See the image below 👇\" or similar CTA to view image\n- NO detailed explanations (that's in the image)\n- NO hashtags\n- Make it DIFFERENT from previous posts\n\nWrite ONLY the hook/teaser text:",
+    "contextTemplate": "Context: {description}",
+    "keywordsTemplate": "Keywords: {keywords}",
+    "previousPostsTemplate": "\nPrevious posts about this topic (make this one DIFFERENT):\n{previousPosts}"
+  },
+  
+  "imageGeneration": {
+    "designPrompt": "You are an expert LinkedIn infographic designer. Create an EXTREMELY DETAILED image generation prompt for Gemini API Imagen.\n\nPOST CONTENT (use as context):\n{content}\n\nTOPIC: {topicName}\n\n🎯 CRITICAL GOAL: The IMAGE is the PRIMARY content! 98% of LinkedIn users will ONLY look at the image and NOT read the post text. The image MUST be a COMPLETE, SELF-CONTAINED information piece with ALL key points.\n\nThe image MUST tell the FULL STORY with TEXT-HEAVY, information-rich design.\n\nCreate a detailed image prompt that includes:\n\n1. MAIN HEADLINE (Top 20% - MOST IMPORTANT):\n   - Extract the CORE MESSAGE from the topic\n   - BOLD, EXTRA LARGE text (70-90px)\n   - HIGH CONTRAST colors (white on dark OR black on bright)\n   - Center-aligned, impossible to miss\n   - This is the HOOK that stops scrolling\n\n2. KEY POINTS SECTION (Middle 60% - INFORMATION CORE):\n   - 3-5 SPECIFIC, ACTIONABLE points about {topicName}\n   - Each point: Large icon (60px) + Clear text (28-32px)\n   - Numbered or bulleted format\n   - Each point should be SELF-EXPLANATORY\n   - Use real data/stats/tips (not generic)\n   - This is where users get VALUE\n\n3. BACKGROUND & VISUAL STYLE:\n   - Professional gradient (brand colors based on topic)\n   - Clean, minimal, not distracting\n   - Subtle patterns OK, but text MUST be readable\n   - Modern, corporate LinkedIn aesthetic\n\n4. BOTTOM CTA SECTION (Bottom 20%):\n   - Clear call-to-action or key takeaway\n   - Smaller but visible text (24-28px)\n   - Optional: Logo placeholder or branding area\n   - Subtle, doesn't compete with main content\n\n5. ICONS & VISUAL ELEMENTS:\n   - Use 3-5 LARGE, clear icons (50-70px each)\n   - Icons should ENHANCE understanding, not decorate\n   - Modern, flat, professional style\n   - Match topic (lightbulb=ideas, chart=data, gear=process)\n\n6. COLOR PSYCHOLOGY by Topic:\n   - AI/Tech: Blues, purples (trust, innovation)\n   - Business: Blue, teal (professional, growth)\n   - Marketing: Orange, yellow (energy, creativity)\n   - Leadership: Gold, navy (authority, wisdom)\n   - Always HIGH CONTRAST for text readability\n\nCRITICAL REQUIREMENTS - IMAGE MUST BE SELF-SUFFICIENT:\n\n✅ TEXT-HEAVY DESIGN (This is an INFOGRAPHIC, not a decorative image!):\n- Headline: 70-90px, BOLD, impossible to miss\n- Body points: 28-32px, clear, easy to read on mobile\n- MINIMUM 3-5 specific, valuable points with details\n- Each point should teach something or provide value\n- Use numbers, stats, or concrete tips (not vague statements)\n\n✅ MOBILE-FIRST:\n- Remember: 80% view on mobile phones\n- Text must be readable at thumbnail size\n- High contrast ALWAYS (white on dark OR black on bright)\n- No tiny text, no decorative fonts\n- BOLD, SANS-SERIF only (Arial, Helvetica, Roboto)\n\n✅ LAYOUT HIERARCHY:\n- Top 20%: Main headline (the hook)\n- Middle 60%: 3-5 key points with icons (the value)\n- Bottom 20%: CTA or summary (the action)\n- All text HORIZONTAL, left-aligned or center-aligned\n- NO curved text, NO angled text, NO artistic text\n\n✅ INFORMATION DENSITY:\n- The image should answer: \"What is this about?\" in 3 seconds\n- Someone scrolling should get the FULL MESSAGE from image alone\n- Think: \"LinkedIn carousel slide\" or \"PowerPoint summary slide\"\n- NOT a decoration - this IS the content!\n\n✅ STYLE REFERENCE:\n- Like: Professional presentation slide, business infographic, educational poster\n- NOT like: Abstract art, decorative graphic, photo with text overlay\n\n🎯 GOAL: Create an image that makes post text almost unnecessary. The image = the content.\n\nOutput a COMPLETE, EXTREMELY DETAILED image generation prompt (300-400 words) that will create a TEXT-HEAVY, INFORMATION-RICH infographic.",
+    
+    "technicalSpecs": "\n\nTECHNICAL SPECS:\n- Size: 1024x1024px square format\n- Resolution: High quality, sharp text\n- Style: Professional LinkedIn infographic\n- Text: Large, bold, easily readable on mobile\n- Colors: Professional, eye-catching, not too bright\n- Layout: Clean, organized, not cluttered\n- Icons: Simple, modern, vector-style\n- Overall: Professional yet engaging, informative yet attractive",
+    
+    "fallbackTemplate": "TEXT-HEAVY LinkedIn Infographic about {topicName}:\n\n🎯 PRIMARY GOAL: Image contains ALL the information. User should get complete value WITHOUT reading post text.\n\n**LAYOUT STRUCTURE:**\n\nTOP SECTION (20% - THE HOOK):\n- Headline in EXTRA LARGE BOLD text (80px): \"{headline}\"\n- White text on dark {bgColor} background OR black on bright background\n- Center-aligned, fills width\n- Subtitle if needed (32px): Brief topic context\n\nMIDDLE SECTION (60% - THE VALUE - MOST IMPORTANT!):\nCreate 4-5 NUMBERED POINTS with detailed information:\n\n1. [ICON: relevant to point] First Key Point\n   • Sub-detail or statistic (26px text)\n   • Specific, actionable information\n   \n2. [ICON: relevant to point] Second Key Point\n   • Sub-detail or statistic (26px text)\n   • Specific, actionable information\n\n3. [ICON: relevant to point] Third Key Point\n   • Sub-detail or statistic (26px text)\n   • Specific, actionable information\n\n4. [ICON: relevant to point] Fourth Key Point\n   • Sub-detail or statistic (26px text)\n   • Specific, actionable information\n\n5. [ICON: relevant to point] Fifth Key Point (if space)\n   • Sub-detail or statistic (26px text)\n   • Specific, actionable information\n\nEach numbered point should have:\n- Large number/bullet (40px) in {primaryColor}\n- Icon (60px) next to number\n- Main text (30px) in white/black (high contrast)\n- Supporting detail (24px) in lighter shade\n- Left-aligned for easy reading\n\nBOTTOM SECTION (20% - THE CTA):\n- Call-to-action or key takeaway (28px)\n- Example: \"Start implementing today\" or \"Key takeaway: [summary]\"\n- Subtle branding or topic badge\n\n**VISUAL STYLE:**\n- Background: Gradient from {bgColor} to lighter shade\n- Icons: Modern, flat, 60-70px, colors: {primaryColor} and {secondaryColor}\n- Text: BOLD sans-serif, HIGH CONTRAST, mobile-readable\n- Layout: Clean grid, well-spaced, professional\n- Feel: Educational slide deck, business infographic, NOT decorative art\n\n**COLOR USAGE:**\n- Primary: {primaryColor} (icons, accents, numbers)\n- Secondary: {secondaryColor} (highlights, CTAs)\n- Background: {bgColor} gradient\n- Text: Always high contrast (white on dark OR black on bright)\n\n**CRITICAL:**\n- This is an INFORMATION GRAPHIC, not a decorative image\n- User should learn 4-5 specific things from image alone\n- Make it look like a professional presentation slide\n- 80% text and information, 20% visual decoration",
+    
+    "colorSchemes": {
+      "AI": {
+        "primary": "#0066FF",
+        "secondary": "#00D4FF",
+        "bg": "#0A1628"
+      },
+      "Marketing": {
+        "primary": "#FF6B35",
+        "secondary": "#FFD23F",
+        "bg": "#1A1A2E"
+      },
+      "Business": {
+        "primary": "#2E86AB",
+        "secondary": "#A23B72",
+        "bg": "#F18F01"
+      },
+      "Tech": {
+        "primary": "#6C63FF",
+        "secondary": "#4ECDC4",
+        "bg": "#1A1A2E"
+      },
+      "Leadership": {
+        "primary": "#D4AF37",
+        "secondary": "#AA8C39",
+        "bg": "#2C3E50"
+      },
+      "default": {
+        "primary": "#0077B5",
+        "secondary": "#00A0DC",
+        "bg": "#FFFFFF"
+      }
+    },
+    
+    "topicSpecificStyles": {
+      "AI": {
+        "headline": "AI & Machine Learning",
+        "style": "Futuristic, tech-focused with circuit board patterns",
+        "iconStyle": "Tech icons: CPU, neural network, robot, algorithm, data nodes",
+        "contentFocus": "Statistics, performance metrics, capabilities, use cases",
+        "example": "Show specific AI achievements: accuracy %, speed improvements, ROI"
+      },
+      "Marketing": {
+        "headline": "Marketing Strategy",
+        "style": "Bold, energetic with growth arrows and charts",
+        "iconStyle": "Marketing icons: megaphone, target, chart up, funnel, magnet",
+        "contentFocus": "Conversion rates, engagement metrics, ROI, tactics",
+        "example": "Show numbers: CTR %, conversion rates, engagement metrics"
+      },
+      "Business": {
+        "headline": "Business Growth",
+        "style": "Professional, corporate with graphs and data viz",
+        "iconStyle": "Business icons: briefcase, handshake, chart, building, growth",
+        "contentFocus": "Revenue, efficiency, productivity, strategic insights",
+        "example": "Show business impact: revenue %, time saved, efficiency gains"
+      },
+      "Tech": {
+        "headline": "Technology Trends",
+        "style": "Modern, innovative with code snippets and tech elements",
+        "iconStyle": "Tech icons: code, cloud, server, mobile, API, database",
+        "contentFocus": "Technical benefits, features, capabilities, innovations",
+        "example": "Show tech specs: speed, scalability, features, compatibility"
+      },
+      "Leadership": {
+        "headline": "Leadership Insights",
+        "style": "Authoritative, inspiring with people and growth imagery",
+        "iconStyle": "Leadership icons: crown, star, team, goal, strategy, mentor",
+        "contentFocus": "Leadership principles, team building, strategic thinking",
+        "example": "Show leadership metrics: team growth, retention, satisfaction"
+      },
+      "Productivity": {
+        "headline": "Productivity Hacks",
+        "style": "Clean, efficient with time-saving visuals and checklists",
+        "iconStyle": "Productivity icons: clock, checklist, lightning, focus, tools",
+        "contentFocus": "Time saved, efficiency tips, workflow improvements",
+        "example": "Show time impact: hours saved, tasks completed, efficiency %"
+      },
+      "Career": {
+        "headline": "Career Development",
+        "style": "Professional growth with ladder/stairs imagery",
+        "iconStyle": "Career icons: ladder, certificate, briefcase, network, mentor",
+        "contentFocus": "Career tips, skills, networking, advancement strategies",
+        "example": "Show career metrics: salary %, promotion timeline, skills needed"
+      },
+      "Sales": {
+        "headline": "Sales Strategies",
+        "style": "Results-oriented with conversion funnels and revenue charts",
+        "iconStyle": "Sales icons: money, handshake, phone, funnel, target, trophy",
+        "contentFocus": "Conversion tactics, closing techniques, revenue growth",
+        "example": "Show sales numbers: close rate %, revenue increase, deals won"
+      }
+    }
+  }
+}
+
+
