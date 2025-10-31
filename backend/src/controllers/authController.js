@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
-import { sendOTPEmail, sendWelcomeEmail } from '../utils/emailService.js';
+import { sendOTPEmail, sendWelcomeEmail, sendPasswordResetOTP } from '../utils/emailService.js';
 import { generateOTP, getOTPExpiry, verifyOTP } from '../utils/otpHelper.js';
 
 // @desc    Register new user
@@ -13,9 +13,41 @@ export const signup = async (req, res) => {
     // Check if user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
+      // If user exists but not verified, resend OTP
+      if (!userExists.verified) {
+        const otp = generateOTP();
+        const otpExpiry = getOTPExpiry();
+        
+        userExists.verificationOTP = otp;
+        userExists.otpExpires = otpExpiry;
+        userExists.name = name; // Update name if changed
+        userExists.password = password; // Update password if changed
+        await userExists.save();
+        
+        // Resend OTP email
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+          sendOTPEmail(email, otp, name).catch(err => {
+            console.error('Failed to send OTP email:', err);
+          });
+        }
+        
+        return res.status(200).json({
+          success: true,
+          message: 'Account exists but not verified. New OTP sent to your email.',
+          user: {
+            id: userExists._id,
+            email: userExists.email,
+            name: userExists.name,
+            role: userExists.role,
+            verified: userExists.verified
+          }
+        });
+      }
+      
+      // User exists and is verified
       return res.status(400).json({
         success: false,
-        message: 'User already exists'
+        message: 'User already exists. Please login instead.'
       });
     }
 
@@ -40,13 +72,10 @@ export const signup = async (req, res) => {
       });
     }
 
-    // Generate token
-    const token = generateToken(user._id);
-
+    // Don't send token yet - only after email verification
     res.status(201).json({
       success: true,
       message: 'User registered successfully. Please check your email for the verification code.',
-      token,
       user: {
         id: user._id,
         email: user.email,
@@ -99,7 +128,32 @@ export const login = async (req, res) => {
       });
     }
 
-    // Generate token
+    // If user is not verified, resend OTP and ask them to verify
+    if (!user.verified) {
+      // Generate new OTP
+      const otp = generateOTP();
+      const otpExpiry = getOTPExpiry();
+      
+      user.verificationOTP = otp;
+      user.otpExpires = otpExpiry;
+      await user.save();
+      
+      // Send OTP email
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+        sendOTPEmail(email, otp, user.name).catch(err => {
+          console.error('Failed to send OTP email:', err);
+        });
+      }
+      
+      return res.status(403).json({
+        success: false,
+        verified: false,
+        message: 'Please verify your email first. We sent a new OTP to your email.',
+        email: user.email
+      });
+    }
+
+    // Generate token only for verified users
     const token = generateToken(user._id);
 
     res.status(200).json({
@@ -195,9 +249,20 @@ export const verifyOTPCode = async (req, res) => {
       });
     }
 
+    // Generate token after successful verification
+    const token = generateToken(user._id);
+
     res.status(200).json({
       success: true,
-      message: 'Email verified successfully'
+      message: 'Email verified successfully',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        verified: user.verified
+      }
     });
   } catch (error) {
     console.error('OTP verification error:', error);
@@ -297,5 +362,113 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-export default { signup, login, getMe, verifyEmail, verifyOTPCode, resendOTP };
+// @desc    Forgot password - Send OTP
+// @route   POST /api/auth/forgot-password
+// @access  Public
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'No account found with this email'
+      });
+    }
+
+    // Generate OTP for password reset
+    const otp = generateOTP();
+    const otpExpiry = getOTPExpiry();
+
+    user.resetPasswordOTP = otp;
+    user.resetPasswordExpires = otpExpiry;
+    await user.save();
+
+    // Send password reset OTP email
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      await sendPasswordResetOTP(email, otp, user.name);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset OTP sent to your email'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// @desc    Reset password with OTP
+// @route   POST /api/auth/reset-password
+// @access  Public
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, OTP, and new password are required'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters'
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Verify OTP
+    const validation = verifyOTP(otp, user.resetPasswordOTP, user.resetPasswordExpires);
+
+    if (!validation.valid) {
+      return res.status(400).json({
+        success: false,
+        message: validation.message
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.resetPasswordOTP = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successfully. You can now login with your new password.'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+export default { signup, login, getMe, verifyEmail, verifyOTPCode, resendOTP, forgotPassword, resetPassword };
 

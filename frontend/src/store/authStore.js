@@ -23,18 +23,31 @@ const useAuthStore = create((set) => ({
     }
   },
 
-  // Signup
+  // Signup - Don't authenticate yet (wait for email verification)
   signup: async (data) => {
     try {
       const response = await authAPI.signup(data);
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      set({ token, user, isAuthenticated: true });
-      
+      // Don't set token or isAuthenticated - user must verify email first
       return response.data;
     } catch (error) {
       // Re-throw error so component can catch it
+      throw error;
+    }
+  },
+
+  // Verify OTP and Login
+  verifyOTP: async (data) => {
+    try {
+      const response = await authAPI.verifyOTP(data);
+      const { token, user } = response.data;
+      
+      if (token) {
+        localStorage.setItem('token', token);
+        set({ token, user, isAuthenticated: true });
+      }
+      
+      return response.data;
+    } catch (error) {
       throw error;
     }
   },

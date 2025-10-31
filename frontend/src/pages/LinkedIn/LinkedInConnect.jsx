@@ -199,7 +199,7 @@ function LinkedInConnect() {
       <div className="card">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Required Permissions</h2>
         <p className="text-sm text-gray-600 mb-4">
-          AutoLink requires the following LinkedIn permissions to function:
+          LinkedOra requires the following LinkedIn permissions to function:
         </p>
         <ul className="space-y-2 text-sm text-gray-700">
           <li className="flex items-start space-x-2">

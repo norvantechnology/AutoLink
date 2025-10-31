@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Linkedin, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Linkedin, Mail, Lock, User, Eye, EyeOff, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
+import SEO from '../../components/SEO';
 
 function Signup() {
   const navigate = useNavigate();
@@ -43,8 +44,15 @@ function Signup() {
 
     try {
       const { name, email, password } = formData;
-      await signup({ name, email, password });
-      toast.success('Account created! Check your email for verification code.');
+      const response = await signup({ name, email, password });
+      
+      // Check if user exists but not verified (OTP resent)
+      if (response.message && response.message.includes('not verified')) {
+        toast.success('New OTP sent! Check your email for verification code.');
+      } else {
+        toast.success('Account created! Check your email for verification code.');
+      }
+      
       navigate('/verify-otp', { state: { email } });
     } catch (error) {
       toast.error(error.response?.data?.message || 'Signup failed');
@@ -54,15 +62,32 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-linkedin to-linkedin-dark px-4 py-12">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-linkedin to-linkedin-dark px-4 py-12 relative overflow-hidden">
+      {/* SEO Meta Tags */}
+      <SEO page="signup" />
+      
+      {/* Floating Icons Background - Always Visible */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <Linkedin className="absolute top-24 left-12 w-14 h-14 text-white/40 animate-float" style={{ animationDelay: '0s', animationDuration: '6s' }} />
+        <Bot className="absolute top-32 right-24 w-18 h-18 text-white/40 animate-float" style={{ animationDelay: '1.2s', animationDuration: '7.5s' }} />
+        <Calendar className="absolute bottom-28 left-16 w-12 h-12 text-white/40 animate-float" style={{ animationDelay: '2.3s', animationDuration: '8.2s' }} />
+        <TrendingUp className="absolute top-1/4 right-14 w-11 h-11 text-white/40 animate-float" style={{ animationDelay: '0.7s', animationDuration: '6.8s' }} />
+        <Zap className="absolute bottom-24 right-28 w-13 h-13 text-white/40 animate-float" style={{ animationDelay: '1.8s', animationDuration: '7.8s' }} />
+        <Users className="absolute top-1/3 left-20 w-12 h-12 text-white/40 animate-float" style={{ animationDelay: '2.7s', animationDuration: '8.7s' }} />
+        <MessageSquare className="absolute bottom-36 right-20 w-15 h-15 text-white/40 animate-float" style={{ animationDelay: '3.2s', animationDuration: '9.2s' }} />
+        <BarChart3 className="absolute top-1/2 left-1/4 w-10 h-10 text-white/40 animate-float" style={{ animationDelay: '1.5s', animationDuration: '7.3s' }} />
+        <Clock className="absolute bottom-1/4 left-1/3 w-12 h-12 text-white/40 animate-float" style={{ animationDelay: '3s', animationDuration: '9s' }} />
+        <Bot className="absolute top-1/5 left-1/2 w-11 h-11 text-white/40 animate-float" style={{ animationDelay: '0.3s', animationDuration: '6.3s' }} />
+      </div>
+
+      <div className="max-w-md w-full relative z-10">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4">
             <Linkedin className="w-10 h-10 text-linkedin" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Get Started</h1>
-          <p className="text-blue-100">Create your AutoLink account</p>
+          <p className="text-blue-100">Create your LinkedOra account</p>
         </div>
 
         {/* Signup Form */}

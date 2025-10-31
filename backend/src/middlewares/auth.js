@@ -22,6 +22,15 @@ export const protect = async (req, res, next) => {
         });
       }
 
+      // Check if email is verified
+      if (!req.user.verified) {
+        return res.status(403).json({
+          success: false,
+          message: 'Please verify your email first',
+          verified: false
+        });
+      }
+
       next();
     } catch (error) {
       console.error('Auth middleware error:', error);

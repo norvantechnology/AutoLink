@@ -6,10 +6,13 @@ import useAuthStore from './store/authStore';
 import Layout from './components/Layout';
 
 // Pages
+import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import VerifyOTP from './pages/Auth/VerifyOTP';
 import VerifyEmail from './pages/Auth/VerifyEmail';
+import ForgotPassword from './pages/Auth/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Topics from './pages/Topics/Topics';
 import PostHistory from './pages/Automation/PostHistory';
@@ -57,6 +60,9 @@ function App() {
 
   return (
     <Routes>
+      {/* Landing Page */}
+      <Route path="/" element={<Home />} />
+
       {/* Public Routes */}
       <Route
         path="/login"
@@ -76,17 +82,19 @@ function App() {
       />
       <Route path="/verify-otp" element={<VerifyOTP />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Protected Routes */}
       <Route
-        path="/"
+        path="/app"
         element={
           <ProtectedRoute>
             <Layout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route index element={<Navigate to="/app/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="topics" element={<Topics />} />
         <Route path="posts" element={<PostHistory />} />
@@ -97,7 +105,7 @@ function App() {
       </Route>
 
       {/* 404 */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

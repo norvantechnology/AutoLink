@@ -28,10 +28,30 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const requestUrl = error.config?.url || '';
+    
+    // Only redirect on 401 if it's from a protected route (has token)
+    // Don't redirect if it's from login/signup endpoints (wrong credentials)
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      const isAuthEndpoint = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/signup');
+      
+      // Only redirect if it's a token authentication failure, not login credentials failure
+      if (!isAuthEndpoint && error.config?.headers?.Authorization) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
     }
+    
+    // Handle unverified users trying to access protected routes
+    if (error.response?.status === 403 && error.response?.data?.verified === false) {
+      // Only clear token and redirect if accessing protected routes
+      const isAuthEndpoint = requestUrl.includes('/auth/');
+      if (!isAuthEndpoint) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -44,6 +64,8 @@ export const authAPI = {
   verifyOTP: (data) => api.post('/auth/verify-otp', data),
   resendOTP: (data) => api.post('/auth/resend-otp', data),
   verifyEmail: (token) => api.get(`/auth/verify-email/${token}`),
+  forgotPassword: (data) => api.post('/auth/forgot-password', data),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
 };
 
 // LinkedIn API

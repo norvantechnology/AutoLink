@@ -1,47 +1,31 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Linkedin, Mail, Lock, Eye, EyeOff, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock } from 'lucide-react';
+import { Linkedin, Mail, ArrowLeft, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
-import useAuthStore from '../../store/authStore';
+import { authAPI } from '../../services/api';
 import SEO from '../../components/SEO';
 
-function Login() {
+function ForgotPassword() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.email || !formData.password) {
-      toast.error('Please fill in all fields');
+
+    if (!email) {
+      toast.error('Please enter your email');
       return;
     }
 
     setLoading(true);
 
     try {
-      await login(formData);
-      toast.success('Welcome back!');
-      navigate('/app/dashboard');
+      await authAPI.forgotPassword({ email });
+      toast.success('Password reset code sent! Check your email.');
+      navigate('/reset-password', { state: { email } });
     } catch (error) {
-      // Handle unverified user attempting to login
-      if (error.response?.status === 403 && error.response?.data?.verified === false) {
-        toast.error(error.response?.data?.message || 'Please verify your email first');
-        // Redirect to OTP verification page
-        navigate('/verify-otp', { state: { email: error.response?.data?.email || formData.email } });
-      } else {
-        toast.error(error.response?.data?.message || 'Login failed');
-      }
+      toast.error(error.response?.data?.message || 'Failed to send reset code');
     } finally {
       setLoading(false);
     }
@@ -50,7 +34,7 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-linkedin to-linkedin-dark px-4 relative overflow-hidden">
       {/* SEO Meta Tags */}
-      <SEO page="login" />
+      <SEO page="forgotPassword" />
       
       {/* Floating Icons Background - Always Visible */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -67,16 +51,16 @@ function Login() {
       </div>
 
       <div className="max-w-md w-full relative z-10">
-        {/* Logo */}
+        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4">
             <Linkedin className="w-10 h-10 text-linkedin" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-blue-100">Sign in to your LinkedOra account</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Forgot Password?</h1>
+          <p className="text-blue-100">No worries, we'll send you reset instructions</p>
         </div>
 
-        {/* Login Form */}
+        {/* Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -87,53 +71,13 @@ function Login() {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="input pl-10"
                   placeholder="you@example.com"
                   required
                 />
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="input pl-10 pr-10"
-                  placeholder="••••••••"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Forgot Password Link */}
-            <div className="text-right">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-linkedin hover:text-linkedin-dark font-medium transition-colors"
-              >
-                Forgot password?
-              </Link>
             </div>
 
             <button
@@ -147,34 +91,36 @@ function Login() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Signing in...
+                  Sending...
                 </span>
               ) : (
-                'Sign In'
+                'Send Reset Code'
               )}
             </button>
           </form>
 
+          {/* Back to Login */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link
-                to="/signup"
-                className="font-medium text-linkedin hover:text-linkedin-dark transition-colors"
-              >
-                Sign up
-              </Link>
-            </p>
+            <Link
+              to="/login"
+              className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Login
+            </Link>
           </div>
         </div>
 
         <p className="text-center text-blue-100 text-sm mt-6">
-          Automate your LinkedIn presence with AI-powered content
+          Remember your password?{' '}
+          <Link to="/login" className="font-medium text-white hover:text-blue-100 transition-colors">
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default ForgotPassword;
 

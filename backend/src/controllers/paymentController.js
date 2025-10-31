@@ -168,13 +168,13 @@ export const createPaymentRequest = async (req, res) => {
       planType: planType,
       postsPerDay: postsPerDay,
       planName: basePricing.planName,
-      note: `AutoLink ${planType} - ${postsPerDay} posts/day`,
+      note: `LinkedOra ${planType} - ${postsPerDay} posts/day`,
       method: currency.paymentMethod
     };
 
     if (currency.paymentMethod === 'upi' && currency.upiId) {
       paymentInfo.upiId = currency.upiId;
-      paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'AutoLink'}&am=${amount}&cu=${currency.code}&tn=AutoLink-Payment`;
+      paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'LinkedOra'}&am=${amount}&cu=${currency.code}&tn=LinkedOra-Payment`;
     } else if (currency.paymentMethod === 'paypal' && currency.paypalEmail) {
       paymentInfo.paypalEmail = currency.paypalEmail;
       paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalEmail}/${amount}`;
@@ -317,7 +317,7 @@ export const upgradePlan = async (req, res) => {
       amount: amountToPay,
       currencyCode: currency.code,
       currencySymbol: currency.symbol,
-      note: `AutoLink Upgrade - ${newPostsPerDay} posts/day (${startImmediately ? 'Immediate' : 'Scheduled'})`,
+      note: `LinkedOra Upgrade - ${newPostsPerDay} posts/day (${startImmediately ? 'Immediate' : 'Scheduled'})`,
       method: currency.paymentMethod,
       upgradeType,
       startImmediately,
@@ -339,7 +339,7 @@ export const upgradePlan = async (req, res) => {
 
     if (currency.paymentMethod === 'upi' && currency.upiId) {
       paymentInfo.upiId = currency.upiId;
-      paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'AutoLink'}&am=${amountToPay}&cu=${currency.code}&tn=AutoLink-${newSubscription._id}`;
+      paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'LinkedOra'}&am=${amountToPay}&cu=${currency.code}&tn=LinkedOra-${newSubscription._id}`;
     } else if (currency.paymentMethod === 'paypal' && currency.paypalEmail) {
       paymentInfo.paypalEmail = currency.paypalEmail;
       paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalEmail}/${amountToPay}`;

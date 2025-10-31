@@ -23,16 +23,16 @@ function Layout() {
 
   // Navigation based on user role
   const userNavigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Topics', href: '/topics', icon: FileText },
-    { name: 'Scheduled Posts', href: '/scheduled', icon: Calendar },
-    { name: 'Post History', href: '/posts', icon: History },
-    { name: 'Payment History', href: '/payments', icon: CreditCard },
-    { name: 'LinkedIn', href: '/linkedin', icon: Linkedin },
+    { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
+    { name: 'Topics', href: '/app/topics', icon: FileText },
+    { name: 'Scheduled Posts', href: '/app/scheduled', icon: Calendar },
+    { name: 'Post History', href: '/app/posts', icon: History },
+    { name: 'Payment History', href: '/app/payments', icon: CreditCard },
+    { name: 'LinkedIn', href: '/app/linkedin', icon: Linkedin },
   ];
 
   const adminNavigation = [
-    { name: 'Admin Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Admin Dashboard', href: '/app/admin', icon: LayoutDashboard },
   ];
 
   const navigation = user?.role === 'admin' ? adminNavigation : userNavigation;
@@ -56,9 +56,9 @@ function Layout() {
         }`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b">
-          <Link to="/dashboard" className="flex items-center space-x-2">
+          <Link to="/app/dashboard" className="flex items-center space-x-2">
             <Linkedin className="w-8 h-8 text-linkedin" />
-            <span className="text-xl font-bold text-gray-900">AutoLink</span>
+            <span className="text-xl font-bold text-gray-900">LinkedOra</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -132,7 +132,7 @@ function Layout() {
             <div className="flex items-center space-x-4">
               {!connected && (
                 <Link
-                  to="/linkedin"
+                  to="/app/linkedin"
                   className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark transition-colors"
                 >
                   <Linkedin className="w-4 h-4" />

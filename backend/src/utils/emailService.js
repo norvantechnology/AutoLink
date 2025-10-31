@@ -17,10 +17,15 @@ const emailTemplates = JSON.parse(readFileSync(templatesPath, 'utf-8'));
 // ============================================================================
 
 const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || 'gmail',
+  host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
+  port: process.env.EMAIL_PORT || 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
@@ -87,7 +92,7 @@ const sendEmail = async (options) => {
   const { to, subject, html } = options;
 
   const mailOptions = {
-    from: `AutoLink <${process.env.EMAIL_USER}>`,
+    from: `LinkedOra <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html: wrapInLayout(html)
@@ -327,10 +332,44 @@ export const sendDailyReportEmail = async (email, reportData) => {
   });
 };
 
+/**
+ * Send password reset OTP email
+ * @param {String} email - Recipient email
+ * @param {String} otp - OTP code
+ * @param {String} name - User name
+ */
+export const sendPasswordResetOTP = async (email, otp, name = 'there') => {
+  const otpBox = createOTPBox(otp);
+  
+  const html = `
+    <h1 style="color: #0077B5; margin-bottom: 24px;">Password Reset Request</h1>
+    <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+      Hi ${name},
+    </p>
+    <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+      We received a request to reset your password. Use the code below to reset your password:
+    </p>
+    ${otpBox}
+    <p style="color: #666; font-size: 16px; line-height: 1.6; margin-top: 24px; margin-bottom: 24px;">
+      This code will expire in <strong>10 minutes</strong>.
+    </p>
+    <p style="color: #666; font-size: 14px; line-height: 1.6; margin-top: 32px; padding: 16px; background-color: #FEF3C7; border-left: 4px solid: #F59E0B; border-radius: 4px;">
+      <strong>⚠️ Security Notice:</strong> If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
+    </p>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: '🔐 Reset Your LinkedOra Password',
+    html
+  });
+};
+
 export default {
   sendOTPEmail,
   sendVerificationEmail,
   sendPasswordResetEmail,
+  sendPasswordResetOTP,
   sendWelcomeEmail,
   sendSubscriptionEmail,
   sendPaymentPendingEmail,

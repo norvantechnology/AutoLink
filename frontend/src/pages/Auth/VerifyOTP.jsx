@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Mail, Linkedin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI } from '../../services/api';
+import useAuthStore from '../../store/authStore';
 
 function VerifyOTP() {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || '';
+  const { verifyOTP: verifyOTPStore, logout } = useAuthStore();
   
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
@@ -66,10 +68,11 @@ function VerifyOTP() {
 
     try {
       setLoading(true);
-      await authAPI.verifyOTP({ email, otp: otpCode });
+      // Use auth store to verify OTP and login
+      await verifyOTPStore({ email, otp: otpCode });
       setVerified(true);
-      toast.success('Email verified successfully!');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      toast.success('Email verified successfully! Logging you in...');
+      setTimeout(() => navigate('/app/dashboard'), 2000);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Invalid or expired OTP');
       setOtp(['', '', '', '', '', '']);
@@ -174,7 +177,10 @@ function VerifyOTP() {
           {/* Back to Login */}
           <div className="mt-6 text-center">
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                logout(); // Clear any token
+                navigate('/login');
+              }}
               className="text-sm text-gray-600 hover:text-gray-900"
             >
               Back to Login

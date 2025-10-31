@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import connectDB from './config/db.js';
 import { startCronJobs } from './cron/cronJobs.js';
 import errorHandler from './middlewares/errorHandler.js';
@@ -27,13 +26,22 @@ initializePaymentSystem();
 // Initialize express app
 const app = express();
 
-// Middleware - Allow all origins
-app.use(cors({
-  origin: true, // Allow all origins
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
-}));
+// CORS Middleware - Allow all origins
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
+  res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Range');
+  res.header('Access-Control-Max-Age', '3600');
+  
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'AutoLink API is running',
+    message: 'LinkedOra API is running',
     timestamp: new Date().toISOString(),
     automation: 'Active'
   });
@@ -73,7 +81,7 @@ app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════╗
 ║                                            ║
-║   🚀 AutoLink Backend Started!            ║
+║   🚀 LinkedOra Backend Started!           ║
 ║                                            ║
 ║   📡 Server: http://localhost:${PORT}       ║
 ║   🏥 Health: http://localhost:${PORT}/health║

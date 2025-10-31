@@ -23,15 +23,18 @@ fi
 echo -e "${YELLOW}📤 Deploying to EC2...${NC}"
 echo ""
 
-# Copy .env file to EC2
-if [ -f "backend/.env" ]; then
-    echo -e "${YELLOW}📋 Copying .env file to EC2...${NC}"
-    scp -i "AutoLink.pem" backend/.env ec2-user@ec2-54-87-6-215.compute-1.amazonaws.com:/home/ec2-user/AutoLink/backend/.env
-    echo -e "${GREEN}✓ .env file copied${NC}"
-else
-    echo -e "${RED}⚠️  Warning: backend/.env not found - skipping${NC}"
-fi
+# Copy backend files to EC2
+echo -e "${YELLOW}📦 Copying backend files to EC2...${NC}"
+rsync -avz --progress \
+  --exclude 'node_modules' \
+  --exclude '.git' \
+  --exclude '.env.example' \
+  --exclude '*.log' \
+  --exclude 'dist' \
+  -e "ssh -i AutoLink.pem" \
+  backend/ ec2-user@ec2-54-87-6-215.compute-1.amazonaws.com:/home/ec2-user/AutoLink/backend/
 
+echo -e "${GREEN}✓ Backend files copied${NC}"
 echo ""
 
 # SSH into EC2 and run deployment commands
@@ -42,16 +45,8 @@ echo "║   🚀 Backend Deployment on EC2                          ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
 
-# Navigate to project directory
-cd /home/ec2-user/AutoLink
-
-echo "📥 Pulling latest changes from git..."
-git pull origin main
-
-# Backend deployment
-echo ""
-echo "🔧 Deploying Backend..."
-cd backend
+# Navigate to backend directory
+cd /home/ec2-user/AutoLink/backend
 
 echo "Installing backend dependencies..."
 npm install --production

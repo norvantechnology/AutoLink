@@ -1,0 +1,18 @@
+# LinkedOra - Robots.txt
+# Allow search engines to crawl public pages
+
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /signup
+
+# Block private/authenticated pages
+Disallow: /app/
+Disallow: /verify-otp
+Disallow: /verify-email
+Disallow: /reset-password
+Disallow: /admin
+
+# Sitemap location
+Sitemap: https://www.linkedora.com/sitemap.xml
+
