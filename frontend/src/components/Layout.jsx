@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -39,6 +39,16 @@ function Layout() {
 
   const isActive = (path) => location.pathname === path;
 
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar backdrop */}
@@ -56,7 +66,11 @@ function Layout() {
         }`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b">
-          <Link to="/app/dashboard" className="flex items-center space-x-2">
+          <Link 
+            to="/app/dashboard" 
+            className="flex items-center space-x-2"
+            onClick={() => setSidebarOpen(false)}
+          >
             <Linkedin className="w-8 h-8 text-linkedin" />
             <span className="text-xl font-bold text-gray-900">LinkedOra</span>
           </Link>
@@ -75,6 +89,7 @@ function Layout() {
               <Link
                 key={item.name}
                 to={item.href}
+                onClick={() => setSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive(item.href)
                     ? 'bg-linkedin text-white'
@@ -133,6 +148,7 @@ function Layout() {
               {!connected && (
                 <Link
                   to="/app/linkedin"
+                  onClick={() => setSidebarOpen(false)}
                   className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark transition-colors"
                 >
                   <Linkedin className="w-4 h-4" />

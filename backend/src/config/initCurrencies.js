@@ -38,7 +38,8 @@ export const initializeCurrencies = async () => {
         conversionRate: 1,
         isActive: true,
         paymentMethod: 'paypal',
-        paypalEmail: process.env.PAYPAL_EMAIL 
+        paypalEmail: process.env.PAYPAL_EMAIL,
+        paypalUsername: process.env.PAYPAL_USERNAME // PayPal.me username (optional)
       },
       {
         code: 'INR',

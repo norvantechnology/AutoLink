@@ -177,7 +177,15 @@ export const createPaymentRequest = async (req, res) => {
       paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'LinkedOra'}&am=${amount}&cu=${currency.code}&tn=LinkedOra-Payment`;
     } else if (currency.paymentMethod === 'paypal' && currency.paypalEmail) {
       paymentInfo.paypalEmail = currency.paypalEmail;
-      paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalEmail}/${amount}`;
+      
+      // Use PayPal.me if username is provided, otherwise use send money page
+      if (currency.paypalUsername) {
+        // PayPal.me format (requires username, not email)
+        paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalUsername}/${amount}${currency.code}`;
+      } else {
+        // Open PayPal send money page with email pre-filled
+        paymentInfo.paypalUrl = `https://www.paypal.com/myaccount/transfer/send`;
+      }
     }
 
     res.status(200).json({
@@ -342,7 +350,13 @@ export const upgradePlan = async (req, res) => {
       paymentInfo.upiUrl = `upi://pay?pa=${currency.upiId}&pn=${process.env.UPI_NAME || 'LinkedOra'}&am=${amountToPay}&cu=${currency.code}&tn=LinkedOra-${newSubscription._id}`;
     } else if (currency.paymentMethod === 'paypal' && currency.paypalEmail) {
       paymentInfo.paypalEmail = currency.paypalEmail;
-      paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalEmail}/${amountToPay}`;
+      
+      // Use PayPal.me if username is provided, otherwise use send money page
+      if (currency.paypalUsername) {
+        paymentInfo.paypalUrl = `https://www.paypal.com/paypalme/${currency.paypalUsername}/${amountToPay}${currency.code}`;
+      } else {
+        paymentInfo.paypalUrl = `https://www.paypal.com/myaccount/transfer/send`;
+      }
     }
 
     res.status(201).json({

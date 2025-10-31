@@ -34,7 +34,6 @@ function Dashboard() {
   const [currencies, setCurrencies] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [pricing, setPricing] = useState([]);
-  const [testGenerating, setTestGenerating] = useState(false);
 
   // Local state for settings form
   const [formData, setFormData] = useState({
@@ -166,19 +165,6 @@ function Dashboard() {
     }
   };
 
-  const handleTestGenerate = async () => {
-    setTestGenerating(true);
-    try {
-      await automationAPI.testGenerate();
-      toast.success('Test post generated! Check Post History in 30 seconds.');
-      setTimeout(() => loadDashboard(), 3000);
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Test generation failed');
-    } finally {
-      setTestGenerating(false);
-    }
-  };
-
   const handlePostsPerDayChange = (value) => {
     const count = parseInt(value);
     const newPublishTimes = [...formData.publishTimes];
@@ -257,30 +243,6 @@ function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-1">Fully automated LinkedIn content generation</p>
         </div>
-        {subscription && (
-          <button
-            onClick={handleTestGenerate}
-            disabled={testGenerating}
-            className="btn btn-secondary flex items-center space-x-2"
-          >
-            {testGenerating ? (
-              <>
-                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Generating...</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                <span>Test Generate</span>
-              </>
-            )}
-          </button>
-        )}
       </div>
 
       {/* LinkedIn Connection Alert */}
@@ -473,13 +435,6 @@ function Dashboard() {
                   {saving ? 'Saving...' : 'Save Settings'}
                 </button>
               )}
-              <button
-                onClick={handleTestGenerate}
-                disabled={testGenerating || !subscription}
-                className="w-full px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium disabled:opacity-50"
-              >
-                {testGenerating ? 'Generating...' : 'Test Generate Post'}
-              </button>
             </div>
           </div>
         </div>
@@ -598,7 +553,7 @@ function Dashboard() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">Recent Posts</h2>
           <Link
-            to="/posts"
+            to="/app/posts"
             className="text-sm text-linkedin hover:text-linkedin-dark font-medium"
           >
             View All →

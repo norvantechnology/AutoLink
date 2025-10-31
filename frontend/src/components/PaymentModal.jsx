@@ -94,6 +94,11 @@ function PaymentModal({ isOpen, onClose, paymentInfo, onPaymentSubmitted }) {
             <div className="mb-3">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-xs font-medium text-blue-900 mb-2">PayPal Payment</p>
+                <div className="bg-white rounded p-2 mb-2">
+                  <p className="text-xs text-gray-600 mb-1">Send payment to:</p>
+                  <p className="text-sm font-semibold text-gray-900">{paymentInfo.paypalEmail}</p>
+                  <p className="text-xs text-blue-600 mt-1">Amount: {paymentInfo.currencySymbol}{paymentInfo.amount}</p>
+                </div>
                 <a
                   href={paymentInfo.paypalUrl}
                   target="_blank"
@@ -101,7 +106,7 @@ function PaymentModal({ isOpen, onClose, paymentInfo, onPaymentSubmitted }) {
                   className="btn btn-primary w-full flex items-center justify-center space-x-2 text-xs py-2"
                 >
                   <span>💰</span>
-                  <span>Pay with PayPal</span>
+                  <span>Open PayPal</span>
                 </a>
               </div>
             </div>
@@ -120,10 +125,10 @@ function PaymentModal({ isOpen, onClose, paymentInfo, onPaymentSubmitted }) {
                 </>
               ) : paymentInfo.method === 'paypal' ? (
                 <>
-                  <li>Click "Pay with PayPal" button</li>
-                  <li>Complete {paymentInfo.currencySymbol}{paymentInfo.amount} payment</li>
-                  <li>Enter transaction ID below</li>
-                  <li>Wait for verification (within 24 hours)</li>
+                  <li>Click "Open PayPal" button</li>
+                  <li>Enter email: {paymentInfo.paypalEmail}</li>
+                  <li>Send {paymentInfo.currencySymbol}{paymentInfo.amount}</li>
+                  <li>Enter PayPal transaction ID below</li>
                 </>
               ) : (
                 <>

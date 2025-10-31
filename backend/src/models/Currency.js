@@ -34,7 +34,10 @@ const currencySchema = new mongoose.Schema({
     type: String // For INR/UPI payments
   },
   paypalEmail: {
-    type: String // For USD and other currencies
+    type: String // For USD and other currencies - email for display/manual payments
+  },
+  paypalUsername: {
+    type: String // PayPal.me username (without @ symbol)
   },
   createdAt: {
     type: Date,
