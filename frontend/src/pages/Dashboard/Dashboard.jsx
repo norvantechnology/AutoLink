@@ -299,7 +299,7 @@ function Dashboard() {
               Connect your LinkedIn to start automation.
             </p>
             <Link
-              to="/linkedin"
+              to="/app/linkedin"
               className="mt-3 inline-flex items-center text-sm font-medium text-yellow-800 hover:text-yellow-900"
             >
               Connect Now →
@@ -330,23 +330,23 @@ function Dashboard() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* LEFT: SUBSCRIPTION & PLAN */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {/* Plan Selection Box */}
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                <CreditCard className="w-4 h-4 mr-2 text-linkedin" />
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3 sm:p-4">
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 flex items-center">
+                <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 mr-2 text-linkedin" />
                 Subscription Plan
               </h3>
               
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 <div>
                   <label className="text-xs text-gray-600 block mb-1">Posts Per Day</label>
                   <select
                     value={formData.postsPerDay}
                     onChange={(e) => handlePostsPerDayChange(e.target.value)}
-                    className={`w-full px-3 py-2 text-sm border rounded-lg ${subscription ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'}`}
+                    className={`w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border rounded-lg ${subscription ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'}`}
                     disabled={!!subscription}
                   >
                     {[1, 2, 3, 4, 5].map(n => (
@@ -365,7 +365,7 @@ function Dashboard() {
                   <select
                     value={selectedCurrency}
                     onChange={(e) => handleCurrencyChange(e.target.value)}
-                    className={`w-full px-3 py-2 text-sm border rounded-lg ${subscription ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'}`}
+                    className={`w-full px-2 sm:px-3 py-2 text-xs sm:text-sm border rounded-lg ${subscription ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'}`}
                     disabled={!!subscription}
                   >
                     {currencies.map((curr) => (
@@ -374,9 +374,9 @@ function Dashboard() {
                   </select>
                 </div>
 
-                <div className={`p-4 rounded-lg text-center ${subscription ? 'bg-green-100 border-2 border-green-300' : 'bg-white border-2 border-linkedin'}`}>
+                <div className={`p-3 sm:p-4 rounded-lg text-center ${subscription ? 'bg-green-100 border-2 border-green-300' : 'bg-white border-2 border-linkedin'}`}>
                   <p className="text-xs text-gray-600 mb-1">Monthly Cost</p>
-                  <p className={`text-3xl font-bold ${subscription ? 'text-green-700' : 'text-linkedin'}`}>
+                  <p className={`text-2xl sm:text-3xl font-bold ${subscription ? 'text-green-700' : 'text-linkedin'}`}>
                     {subscription ? subscription.currencySymbol : (currencies.find(c => c.code === selectedCurrency)?.symbol || '$')}
                     {subscription ? subscription.amount : (pricing.find(p => p.postsPerDay === formData.postsPerDay)?.price || 10)}
                   </p>
@@ -388,9 +388,9 @@ function Dashboard() {
                 {!subscription && (
                   <button
                     onClick={handlePayNow}
-                    className="w-full px-4 py-3 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark font-medium"
+                    className="w-full px-4 py-2.5 sm:py-3 bg-linkedin text-white rounded-lg hover:bg-linkedin-dark font-medium text-sm sm:text-base"
                   >
-                    <CreditCard className="w-4 h-4 inline mr-2" />
+                    <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 inline mr-2" />
                     Subscribe Now
                   </button>
                 )}
@@ -398,20 +398,20 @@ function Dashboard() {
             </div>
 
             {/* Today's Progress Box */}
-            <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Today's Progress</h3>
+            <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-3 sm:p-4">
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">Today's Progress</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between p-2 bg-white rounded">
-                  <span className="text-sm text-gray-600">Generated</span>
-                  <span className="text-sm font-bold text-gray-900">{stats?.generatedToday || 0} / {formData.postsPerDay}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Generated</span>
+                  <span className="text-xs sm:text-sm font-bold text-gray-900">{stats?.generatedToday || 0} / {formData.postsPerDay}</span>
                 </div>
                 <div className="flex items-center justify-between p-2 bg-white rounded">
-                  <span className="text-sm text-gray-600">Published</span>
-                  <span className="text-sm font-bold text-gray-900">{stats?.publishedToday || 0} / {formData.postsPerDay}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Published</span>
+                  <span className="text-xs sm:text-sm font-bold text-gray-900">{stats?.publishedToday || 0} / {formData.postsPerDay}</span>
                 </div>
                 <div className="flex items-center justify-between p-2 bg-white rounded">
-                  <span className="text-sm text-gray-600">Total Posts</span>
-                  <span className="text-sm font-bold text-linkedin">{stats?.totalPosted || 0}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Total Posts</span>
+                  <span className="text-xs sm:text-sm font-bold text-linkedin">{stats?.totalPosted || 0}</span>
                 </div>
               </div>
             </div>
@@ -494,37 +494,37 @@ function Dashboard() {
       </div>
 
       {/* Today's Schedule */}
-      <div className="card">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Today's Schedule</h2>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-            <Clock className="w-5 h-5 text-blue-600" />
-            <div className="flex-1">
-              <p className="font-medium text-gray-900">{formData.contentCreationTime} - Content Generation</p>
-              <p className="text-sm text-gray-600">
-                AI generates {formData.postsPerDay} {formData.postsPerDay === 1 ? 'post' : 'posts'} with images
+      <div className="card p-4 sm:p-6">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Today's Schedule</h2>
+        <div className="space-y-2 sm:space-y-3">
+          <div className="flex items-start sm:items-center space-x-2 sm:space-x-3 p-2 sm:p-3 bg-blue-50 rounded-lg">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-gray-900 text-xs sm:text-sm md:text-base truncate">{formData.contentCreationTime} - Content Generation</p>
+              <p className="text-xs sm:text-sm text-gray-600">
+                AI generates {formData.postsPerDay} {formData.postsPerDay === 1 ? 'post' : 'posts'}
               </p>
             </div>
             {stats?.generatedToday >= formData.postsPerDay ? (
-              <span className="text-green-600 font-medium">✅ Done</span>
+              <span className="text-green-600 font-medium text-xs sm:text-sm flex-shrink-0">✅</span>
             ) : (
-              <span className="text-gray-400 font-medium">⏳ Pending</span>
+              <span className="text-gray-400 font-medium text-xs sm:text-sm flex-shrink-0">⏳</span>
             )}
           </div>
 
           {formData.publishTimes.map((time, index) => {
             const isPublished = stats?.publishedToday > index;
             return (
-              <div key={index} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <Share2 className="w-5 h-5 text-green-600" />
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{time} - Post {index + 1} to LinkedIn</p>
-                  <p className="text-sm text-gray-600">Automatic publishing</p>
+              <div key={index} className="flex items-start sm:items-center space-x-2 sm:space-x-3 p-2 sm:p-3 bg-green-50 rounded-lg">
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 text-xs sm:text-sm md:text-base truncate">{time} - Post {index + 1}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Automatic publishing</p>
                 </div>
                 {isPublished ? (
-                  <span className="text-green-600 font-medium">✅ Posted</span>
+                  <span className="text-green-600 font-medium text-xs sm:text-sm flex-shrink-0">✅</span>
                 ) : (
-                  <span className="text-gray-400 font-medium">⏳ Scheduled</span>
+                  <span className="text-gray-400 font-medium text-xs sm:text-sm flex-shrink-0">⏳</span>
                 )}
               </div>
             );
@@ -533,61 +533,61 @@ function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+        <div className="card p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Posts</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-xs sm:text-sm text-gray-600">Total Posts</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                 {stats?.totalPosted || 0}
               </p>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Clock className="w-6 h-6 text-green-600" />
+            <div className="p-2 sm:p-3 bg-green-100 rounded-lg">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Active Topics</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-xs sm:text-sm text-gray-600">Active Topics</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                 {stats?.totalTopics || 0}
               </p>
             </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <FileText className="w-6 h-6 text-purple-600" />
+            <div className="p-2 sm:p-3 bg-purple-100 rounded-lg">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Likes</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-xs sm:text-sm text-gray-600">Total Likes</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                 {stats?.engagement?.totalLikes || 0}
               </p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <ThumbsUp className="w-6 h-6 text-blue-600" />
+            <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+              <ThumbsUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Engagement</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">
+              <p className="text-xs sm:text-sm text-gray-600">Total Engagement</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                 {(stats?.engagement?.totalLikes || 0) + 
                  (stats?.engagement?.totalComments || 0) + 
                  (stats?.engagement?.totalShares || 0)}
               </p>
             </div>
-            <div className="p-3 bg-pink-100 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-pink-600" />
+            <div className="p-2 sm:p-3 bg-pink-100 rounded-lg">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" />
             </div>
           </div>
         </div>
@@ -698,7 +698,7 @@ function Dashboard() {
               <span className="text-blue-800">
                 Add Topics (at least 2-3 recommended)
                 {stats?.totalTopics === 0 && (
-                  <Link to="/topics" className="ml-2 underline">Add topics</Link>
+                  <Link to="/app/topics" className="ml-2 underline">Add topics</Link>
                 )}
               </span>
             </div>

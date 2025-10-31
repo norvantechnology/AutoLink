@@ -181,8 +181,8 @@ function Home() {
       a: 'Simply pause automation from your dashboard. Resume anytime. You\'re always in control of when and what gets posted.'
     },
     {
-      q: 'Do you offer a free trial?',
-      a: 'Yes! Start with our free trial to experience the power of automated LinkedIn posting. No credit card required to get started.'
+      q: 'How do I get started?',
+      a: 'Simply sign up with your email, connect your LinkedIn account, and start creating topics. You\'ll be posting automatically within 5 minutes!'
     }
   ];
 
@@ -208,7 +208,7 @@ function Home() {
               to="/signup"
               className="btn btn-primary px-4 py-2 sm:px-6 sm:py-3 flex items-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all animate-glow rounded-lg sm:rounded-xl bg-gradient-to-r from-linkedin to-blue-600 text-white text-sm sm:text-base"
             >
-              <span className="font-bold">Start Free Trial</span>
+              <span className="font-bold">Get Started</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
           </div>
@@ -216,7 +216,7 @@ function Home() {
       </nav>
 
       {/* Hero Section - Premium 3D Effect */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-br from-linkedin via-blue-600 to-linkedin-dark animate-gradient">
+      <section className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-br from-linkedin via-blue-600 to-linkedin-dark animate-gradient">
         {/* Animated Mesh Gradient Background */}
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
@@ -267,43 +267,43 @@ function Home() {
           <div className="mt-8 sm:mt-12 flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-blue-100 text-sm sm:text-base px-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>No Credit Card Required</span>
+              <span>Trusted by 500+ Professionals</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Free Trial Available</span>
+              <span>4.9/5 Star Rating</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Cancel Anytime</span>
+              <span>24/7 Automation</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Real Results Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">Proven Results</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Proven Results</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               Real Impact, Real Numbers
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               See the average results our users achieve within the first 90 days
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {realResults.map((result, index) => (
-              <div key={index} className="text-center p-8 bg-gradient-to-br from-white via-blue-50 to-white rounded-2xl border-2 border-linkedin/20 hover:border-linkedin shadow-lg hover:shadow-2xl card-3d group relative overflow-hidden">
+              <div key={index} className="text-center p-4 sm:p-6 md:p-8 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl sm:rounded-2xl border-2 border-linkedin/20 hover:border-linkedin shadow-lg hover:shadow-2xl card-3d group relative overflow-hidden">
                 {/* Animated gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-linkedin/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 <div className="relative z-10">
-                  <div className="text-6xl font-bold bg-gradient-to-r from-linkedin to-blue-600 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform">{result.metric}</div>
-                  <div className="text-lg font-bold text-gray-900 mb-2 group-hover:text-linkedin transition-colors">{result.label}</div>
-                  <div className="text-sm text-gray-600">{result.description}</div>
+                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-linkedin to-blue-600 bg-clip-text text-transparent mb-2 sm:mb-3 group-hover:scale-110 transition-transform">{result.metric}</div>
+                  <div className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-linkedin transition-colors">{result.label}</div>
+                  <div className="text-xs sm:text-sm text-gray-600 hidden sm:block">{result.description}</div>
                 </div>
               </div>
             ))}
@@ -312,19 +312,19 @@ function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">Powerful Features</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Powerful Features</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               Everything You Need to Dominate LinkedIn
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Advanced tools and automation that put your LinkedIn growth on steroids
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.slice(0, 6).map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -348,7 +348,7 @@ function Home() {
           </div>
 
           {/* Additional Features - Premium 3D Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mt-6 sm:mt-8">
             {features.slice(6).map((feature, index) => {
               const Icon = feature.icon;
               return (
@@ -374,33 +374,33 @@ function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">Simple Process</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Simple Process</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               From Setup to Success in 4 Easy Steps
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600 px-4">
               Get your LinkedIn automation running in less than 5 minutes
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {howItWorks.map((item, index) => (
               <div key={index} className="relative">
                 {index < howItWorks.length - 1 && (
                   <div className="hidden lg:block absolute top-10 right-0 w-full h-1 animated-border rounded-full transform translate-x-1/2 opacity-40"></div>
                 )}
-                <div className="relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl card-3d group">
+                <div className="relative bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl card-3d group">
                   {/* Premium step circle with glow */}
-                  <div className="w-24 h-24 bg-gradient-to-br from-linkedin via-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-4xl font-bold mx-auto mb-6 shadow-2xl relative z-10 group-hover:scale-110 transition-transform animate-glow">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-linkedin via-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold mx-auto mb-4 sm:mb-6 shadow-2xl relative z-10 group-hover:scale-110 transition-transform animate-glow">
                     {item.step}
                     {/* Inner glow ring */}
                     <div className="absolute inset-2 rounded-full border-2 border-white/30"></div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-linkedin transition-colors">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-linkedin transition-colors">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -413,15 +413,10 @@ function Home() {
               className="inline-flex items-center space-x-3 bg-gradient-to-r from-linkedin to-blue-600 text-white px-12 py-5 rounded-2xl text-xl font-bold hover:from-blue-600 hover:to-linkedin transition-all shadow-2xl hover:shadow-3xl transform hover:scale-110 animate-glow"
             >
               <Rocket className="w-6 h-6" />
-              <span>Start Your Free Trial Now</span>
+              <span>Get Started Now</span>
               <ArrowRight className="w-6 h-6" />
             </Link>
             <p className="text-sm text-gray-500 mt-6 flex items-center justify-center flex-wrap gap-3">
-              <span className="inline-flex items-center space-x-1">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>No credit card required</span>
-              </span>
-              <span>•</span>
               <span className="inline-flex items-center space-x-1">
                 <Clock className="w-4 h-4 text-blue-500" />
                 <span>Setup in 5 minutes</span>
@@ -429,7 +424,7 @@ function Home() {
               <span>•</span>
               <span className="inline-flex items-center space-x-1">
                 <Shield className="w-4 h-4 text-purple-500" />
-                <span>Cancel anytime</span>
+                <span>Secure & Professional</span>
               </span>
             </p>
           </div>
@@ -438,32 +433,32 @@ function Home() {
 
 
       {/* Use Cases Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">Perfect For</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Perfect For</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               Built for Every Professional
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Whether you're building a personal brand or growing your business, LinkedOra works for you
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {useCases.map((useCase, index) => {
               const Icon = useCase.icon;
               return (
-                <div key={index} className="p-7 bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl border-2 border-gray-200 hover:border-linkedin hover:shadow-xl card-3d group relative overflow-hidden">
+                <div key={index} className="p-5 sm:p-6 md:p-7 bg-gradient-to-br from-white via-blue-50/30 to-white rounded-xl sm:rounded-2xl border-2 border-gray-200 hover:border-linkedin hover:shadow-xl card-3d group relative overflow-hidden">
                   {/* Gradient overlay on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-linkedin/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   
                   <div className="relative z-10">
-                    <div className="w-14 h-14 bg-gradient-to-br from-linkedin to-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all">
-                      <Icon className="w-7 h-7 text-white" />
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-linkedin to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all">
+                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-linkedin transition-colors">{useCase.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{useCase.description}</p>
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-linkedin transition-colors">{useCase.title}</h3>
+                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{useCase.description}</p>
                   </div>
                 </div>
               );
@@ -473,43 +468,43 @@ function Home() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-linkedin to-linkedin-dark relative overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-linkedin to-linkedin-dark relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <span className="text-blue-300 font-semibold text-sm uppercase tracking-wide">Real Benefits</span>
-            <h2 className="text-4xl font-bold text-white mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-blue-300 font-semibold text-xs sm:text-sm uppercase tracking-wide">Real Benefits</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 mt-2 px-4">
               Why Successful Professionals Choose LinkedOra
             </h2>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto px-4">
               Transform your LinkedIn presence and unlock opportunities you never thought possible
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start space-x-4 bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-white" />
+              <div key={index} className="flex items-start space-x-3 sm:space-x-4 bg-white/10 backdrop-blur-sm p-4 sm:p-6 rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-400 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                 </div>
                 <div>
-                  <span className="text-white text-lg font-medium leading-relaxed">{benefit.text}</span>
+                  <span className="text-white text-base sm:text-lg font-medium leading-relaxed">{benefit.text}</span>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Extra benefit callout */}
-          <div className="mt-12 max-w-4xl mx-auto bg-white/20 backdrop-blur-sm p-8 rounded-2xl border-2 border-white/30 text-center">
-            <Sparkles className="w-12 h-12 text-yellow-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-3">Plus: Completely Hands-Free</h3>
-            <p className="text-blue-100 text-lg leading-relaxed">
+          <div className="mt-8 sm:mt-12 max-w-4xl mx-auto bg-white/20 backdrop-blur-sm p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-white/30 text-center">
+            <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 px-2">Plus: Completely Hands-Free</h3>
+            <p className="text-blue-100 text-base sm:text-lg leading-relaxed px-2">
               Once you set it up, LinkedOra works 24/7 in the background. Wake up to new posts, growing engagement, and expanding network—all without any effort from you.
             </p>
           </div>
@@ -517,30 +512,30 @@ function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">FAQ</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">FAQ</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               Common Questions Answered
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600 px-4">
               Everything you need to know about LinkedOra
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {faqs.map((faq, index) => (
-              <details key={index} className="bg-white p-6 rounded-xl shadow-md group">
-                <summary className="cursor-pointer list-none flex items-center justify-between font-bold text-gray-900 text-lg">
-                  <span>{faq.q}</span>
-                  <span className="text-linkedin group-open:rotate-180 transition-transform">
+              <details key={index} className="bg-white p-4 sm:p-6 rounded-lg sm:rounded-xl shadow-md group">
+                <summary className="cursor-pointer list-none flex items-start sm:items-center justify-between font-bold text-gray-900 text-base sm:text-lg">
+                  <span className="pr-4">{faq.q}</span>
+                  <span className="text-linkedin group-open:rotate-180 transition-transform flex-shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </span>
                 </summary>
-                <p className="mt-4 text-gray-600 leading-relaxed">{faq.a}</p>
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -548,47 +543,47 @@ function Home() {
       </section>
 
       {/* Social Proof Stats */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-y-2 border-gray-100">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white border-y-2 border-gray-100">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-4">
               Trusted by Professionals Worldwide
             </h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="p-4">
-              <div className="text-5xl md:text-6xl font-bold text-linkedin mb-2">15,000+</div>
-              <div className="text-gray-600 font-medium">Posts Generated</div>
-              <div className="text-gray-500 text-sm mt-1">This Month</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
+            <div className="p-2 sm:p-4">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">15,000+</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Posts Generated</div>
+              <div className="text-gray-500 text-xs sm:text-sm mt-1">This Month</div>
             </div>
-            <div className="p-4">
-              <div className="text-5xl md:text-6xl font-bold text-linkedin mb-2">500+</div>
-              <div className="text-gray-600 font-medium">Active Professionals</div>
-              <div className="text-gray-500 text-sm mt-1">And Growing</div>
+            <div className="p-2 sm:p-4">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">500+</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Active Professionals</div>
+              <div className="text-gray-500 text-xs sm:text-sm mt-1">And Growing</div>
             </div>
-            <div className="p-4">
-              <div className="text-5xl md:text-6xl font-bold text-linkedin mb-2">98%</div>
-              <div className="text-gray-600 font-medium">Satisfaction Rate</div>
-              <div className="text-gray-500 text-sm mt-1">5-Star Reviews</div>
+            <div className="p-2 sm:p-4">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">98%</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Satisfaction Rate</div>
+              <div className="text-gray-500 text-xs sm:text-sm mt-1">5-Star Reviews</div>
             </div>
-            <div className="p-4">
-              <div className="text-5xl md:text-6xl font-bold text-linkedin mb-2">24/7</div>
-              <div className="text-gray-600 font-medium">Automation</div>
-              <div className="text-gray-500 text-sm mt-1">Never Stop Growing</div>
+            <div className="p-2 sm:p-4">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">24/7</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Automation</div>
+              <div className="text-gray-500 text-xs sm:text-sm mt-1">Never Stop Growing</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Dynamic Pricing Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50/30">
+      <section id="pricing" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50/30">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-linkedin font-semibold text-sm uppercase tracking-wide">Simple Pricing</span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Simple Pricing</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
               Flexible Plans for Every Need
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600 px-4">
               Transparent pricing with no hidden fees. Cancel anytime, no questions asked.
             </p>
           </div>
@@ -600,7 +595,7 @@ function Home() {
             </div>
           ) : pricing && pricing.pricing ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
                 {pricing.pricing.map((plan, index) => {
                   const isPopular = plan.postsPerDay === 3;
                   return (
@@ -710,7 +705,7 @@ function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-linkedin via-blue-600 to-linkedin-dark relative overflow-hidden">
+      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-linkedin via-blue-600 to-linkedin-dark relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
@@ -718,36 +713,32 @@ function Home() {
         </div>
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <Sparkles className="w-16 h-16 text-yellow-300 mx-auto mb-6" />
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
+          <Sparkles className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-yellow-300 mx-auto mb-4 sm:mb-6" />
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4">
             Ready to 10x Your LinkedIn Game?
           </h2>
-          <p className="text-xl sm:text-2xl text-blue-100 mb-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-3 sm:mb-4 px-4">
             Join 500+ professionals who've automated their LinkedIn success
           </p>
-          <p className="text-lg text-blue-200 mb-10 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-blue-200 mb-8 sm:mb-10 max-w-3xl mx-auto px-4">
             Stop wasting hours on content creation. Start building your brand, generating leads, and growing your network—all on complete autopilot.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center mb-6 sm:mb-8 px-4">
             <Link
               to="/signup"
-              className="inline-flex items-center space-x-2 bg-white text-linkedin px-10 py-5 rounded-xl text-xl font-bold hover:bg-blue-50 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
+              className="inline-flex items-center justify-center space-x-2 bg-white text-linkedin px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl font-bold hover:bg-blue-50 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
             >
-              <Rocket className="w-6 h-6" />
-              <span>Start Free Trial</span>
-              <ArrowRight className="w-6 h-6" />
+              <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span>Get Started Now</span>
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </Link>
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-6 text-blue-100 text-sm">
+          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-blue-100 text-xs sm:text-sm px-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-300" />
-              <span>Free 7-Day Trial</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-300" />
-              <span>No Credit Card Needed</span>
+              <span>Trusted by 500+ Users</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-300" />
@@ -755,20 +746,16 @@ function Home() {
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-300" />
-              <span>Cancel Anytime</span>
+              <span>24/7 Support Available</span>
             </div>
           </div>
-
-          <p className="text-blue-200 text-sm mt-8">
-            ⚡ Limited Time: Get your first month 50% off when you sign up today!
-          </p>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center">
             <div>
               <Mail className="w-8 h-8 text-linkedin mx-auto mb-3" />
               <h3 className="font-bold text-gray-900 mb-2">Email Us</h3>
@@ -793,11 +780,11 @@ function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-gray-900 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-12">
             {/* Brand */}
-            <div className="lg:col-span-2">
+            <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Linkedin className="w-10 h-10 text-linkedin" />
                 <span className="text-3xl font-bold">LinkedOra</span>
@@ -823,40 +810,7 @@ function Home() {
               </div>
             </div>
 
-            {/* Product */}
-            <div>
-              <h4 className="font-bold text-lg mb-4">Product</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/signup" className="text-gray-400 hover:text-white transition-colors flex items-center space-x-2">
-                    <ArrowRight className="w-4 h-4" />
-                    <span>Start Free Trial</span>
-                  </Link>
-                </li>
-                <li>
-                  <a href="#features" className="text-gray-400 hover:text-white transition-colors">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#pricing" className="text-gray-400 hover:text-white transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#how-it-works" className="text-gray-400 hover:text-white transition-colors">
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#testimonials" className="text-gray-400 hover:text-white transition-colors">
-                    Success Stories
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Support */}
+            {/* Support & Contact */}
             <div>
               <h4 className="font-bold text-lg mb-4">Support & Contact</h4>
               <ul className="space-y-3">
