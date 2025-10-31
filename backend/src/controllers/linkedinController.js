@@ -33,7 +33,7 @@ export const linkedInCallback = async (req, res) => {
     const { code, state } = req.query;
 
     if (!code) {
-      return res.redirect(`${process.env.FRONTEND_URL}/dashboard?error=access_denied`);
+      return res.redirect(`${process.env.FRONTEND_URL}/app/linkedin?error=access_denied`);
     }
 
     // Decode state to get userId
@@ -92,11 +92,13 @@ export const linkedInCallback = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Redirect to frontend with success
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard?linkedin=connected`);
+    // Redirect to frontend LinkedIn page with success
+    const redirectUrl = `${process.env.FRONTEND_URL}/app/linkedin?linkedin=connected`;
+    console.log('[CALLBACK] Redirecting to:', redirectUrl);
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error('LinkedIn callback error:', error.response?.data || error);
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard?error=connection_failed`);
+    res.redirect(`${process.env.FRONTEND_URL}/app/linkedin?error=connection_failed`);
   }
 };
 

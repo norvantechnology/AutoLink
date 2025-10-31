@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Linkedin, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { Linkedin, CheckCircle, AlertCircle, Loader, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useLinkedInStore from '../../store/linkedinStore';
 
@@ -9,6 +9,7 @@ function LinkedInConnect() {
   const navigate = useNavigate();
   const { connected, account, loading, checkStatus, connect, disconnect } = useLinkedInStore();
   const [disconnecting, setDisconnecting] = useState(false);
+  const [showDisconnectModal, setShowDisconnectModal] = useState(false);
 
   useEffect(() => {
     checkStatus();
@@ -18,14 +19,18 @@ function LinkedInConnect() {
     const error = searchParams.get('error');
 
     if (status === 'connected') {
-      toast.success('LinkedIn account connected successfully! Redirecting to dashboard...');
+      toast.success('LinkedIn account connected successfully!');
       checkStatus();
-      // Redirect to dashboard after 2 seconds
-      setTimeout(() => {
-        navigate('/app/dashboard');
-      }, 2000);
+      // Clear the query parameters from URL
+      navigate('/app/linkedin', { replace: true });
     } else if (error) {
-      toast.error('Failed to connect LinkedIn account');
+      if (error === 'access_denied') {
+        toast.error('LinkedIn access was denied');
+      } else {
+        toast.error('Failed to connect LinkedIn account');
+      }
+      // Clear the error from URL
+      navigate('/app/linkedin', { replace: true });
     }
   }, [searchParams, navigate]);
 
@@ -37,11 +42,12 @@ function LinkedInConnect() {
     }
   };
 
-  const handleDisconnect = async () => {
-    if (!window.confirm('Are you sure you want to disconnect your LinkedIn account?')) {
-      return;
-    }
+  const handleDisconnectClick = () => {
+    setShowDisconnectModal(true);
+  };
 
+  const confirmDisconnect = async () => {
+    setShowDisconnectModal(false);
     setDisconnecting(true);
     try {
       await disconnect();
@@ -52,6 +58,10 @@ function LinkedInConnect() {
     } finally {
       setDisconnecting(false);
     }
+  };
+
+  const cancelDisconnect = () => {
+    setShowDisconnectModal(false);
   };
 
   if (loading) {
@@ -114,7 +124,7 @@ function LinkedInConnect() {
 
             {connected ? (
               <button
-                onClick={handleDisconnect}
+                onClick={handleDisconnectClick}
                 disabled={disconnecting}
                 className="btn btn-danger w-full sm:w-auto px-6 py-2.5 sm:py-2 text-sm sm:text-base"
               >
@@ -222,6 +232,47 @@ function LinkedInConnect() {
           </li>
         </ul>
       </div>
+
+      {/* Disconnect Confirmation Modal */}
+      {showDisconnectModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Disconnect LinkedIn Account</h3>
+              </div>
+              <button
+                onClick={cancelDisconnect}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to disconnect your LinkedIn account? You will need to reconnect to continue posting.
+            </p>
+            
+            <div className="flex space-x-3">
+              <button
+                onClick={cancelDisconnect}
+                className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDisconnect}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                Disconnect
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
