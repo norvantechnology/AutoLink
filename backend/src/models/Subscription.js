@@ -38,7 +38,7 @@ const subscriptionSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['upi', 'qr_code'],
+    enum: ['upi', 'qr_code', 'paypal', 'manual'],
     default: 'upi'
   },
   transactionId: {

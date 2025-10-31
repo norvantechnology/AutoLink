@@ -38,7 +38,7 @@ export const initializeCurrencies = async () => {
         conversionRate: 1,
         isActive: true,
         paymentMethod: 'paypal',
-        paypalEmail: process.env.PAYPAL_EMAIL || 'your_paypal@example.com'
+        paypalEmail: process.env.PAYPAL_EMAIL 
       },
       {
         code: 'INR',
@@ -47,8 +47,27 @@ export const initializeCurrencies = async () => {
         conversionRate: 83, // 1 USD = 83 INR
         isActive: true,
         paymentMethod: 'upi',
-        upiId: process.env.UPI_ID || 'yourname@paytm'
-      }
+        upiId: process.env.UPI_ID 
+      },
+      // Example: Add more currencies as needed
+      // {
+      //   code: 'EUR',
+      //   symbol: '€',
+      //   name: 'Euro',
+      //   conversionRate: 0.92, // 1 USD = 0.92 EUR
+      //   isActive: true,
+      //   paymentMethod: 'paypal',
+      //   paypalEmail: process.env.PAYPAL_EMAIL || 'your_paypal@example.com'
+      // },
+      // {
+      //   code: 'GBP',
+      //   symbol: '£',
+      //   name: 'British Pound',
+      //   conversionRate: 0.79, // 1 USD = 0.79 GBP
+      //   isActive: true,
+      //   paymentMethod: 'paypal',
+      //   paypalEmail: process.env.PAYPAL_EMAIL || 'your_paypal@example.com'
+      // }
     ];
 
     for (const currencyData of currencies) {

@@ -42,121 +42,111 @@ function PaymentModal({ isOpen, onClose, paymentInfo, onPaymentSubmitted }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
+        <div className="p-4">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Complete Payment</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Complete Payment</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Amount */}
-          <div className="bg-linkedin/10 rounded-lg p-4 mb-6 text-center">
-            <p className="text-sm text-gray-600 mb-1">Amount to Pay</p>
-            <p className="text-4xl font-bold text-linkedin">
+          <div className="bg-linkedin/10 rounded-lg p-3 mb-4 text-center">
+            <p className="text-xs text-gray-600 mb-1">Amount to Pay</p>
+            <p className="text-3xl font-bold text-linkedin">
               {paymentInfo.currencySymbol}{paymentInfo.amount}
             </p>
-            <p className="text-sm text-gray-600 mt-1">{paymentInfo.note}</p>
+            <p className="text-xs text-gray-600 mt-1">{paymentInfo.note}</p>
           </div>
 
           {/* Payment Method Based on Currency */}
           {paymentInfo.method === 'upi' && (
             <>
               {/* QR Code for UPI */}
-              <div className="bg-white border-2 border-gray-200 rounded-lg p-4 mb-6">
-                <p className="text-sm font-medium text-gray-700 mb-3 text-center">
+              <div className="bg-white border-2 border-gray-200 rounded-lg p-3 mb-3">
+                <p className="text-xs font-medium text-gray-700 mb-2 text-center">
                   Scan QR Code with Any UPI App
                 </p>
-                <div className="flex justify-center bg-white p-4">
+                <div className="flex justify-center bg-white p-2">
                   <QRCode 
                     value={paymentInfo.upiUrl} 
-                    size={200}
+                    size={160}
                     level="M"
                   />
                 </div>
               </div>
 
-              {/* UPI ID */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Or Pay Directly to UPI ID
-                </label>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={paymentInfo.upiId}
-                    readOnly
-                    className="input flex-1 bg-gray-50"
-                  />
-                  <button
-                    onClick={() => handleCopy(paymentInfo.upiId, 'UPI ID copied!')}
-                    className="btn btn-secondary flex items-center space-x-1"
-                  >
-                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span>{copied ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
+              {/* UPI Payment Link */}
+              <div className="mb-3">
+                <a
+                  href={paymentInfo.upiUrl}
+                  className="btn btn-primary w-full flex items-center justify-center space-x-2 text-xs py-2"
+                >
+                  <span>💳</span>
+                  <span>Pay via UPI App</span>
+                </a>
               </div>
             </>
           )}
 
           {paymentInfo.method === 'paypal' && (
-            <div className="mb-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm font-medium text-blue-900 mb-2">PayPal Payment</p>
-                <p className="text-sm text-blue-700 mb-3">
-                  Send {paymentInfo.currencySymbol}{paymentInfo.amount} to:
-                </p>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={paymentInfo.paypalEmail}
-                    readOnly
-                    className="input flex-1 bg-white"
-                  />
-                  <button
-                    onClick={() => handleCopy(paymentInfo.paypalEmail, 'PayPal email copied!')}
-                    className="btn btn-secondary flex items-center space-x-1"
-                  >
-                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span>{copied ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
+            <div className="mb-3">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-xs font-medium text-blue-900 mb-2">PayPal Payment</p>
                 <a
                   href={paymentInfo.paypalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn btn-primary w-full mt-3"
+                  className="btn btn-primary w-full flex items-center justify-center space-x-2 text-xs py-2"
                 >
-                  Pay with PayPal →
+                  <span>💰</span>
+                  <span>Pay with PayPal</span>
                 </a>
               </div>
             </div>
           )}
 
           {/* Instructions */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-yellow-800 font-medium mb-2">📱 Payment Instructions:</p>
-            <ol className="text-sm text-yellow-700 space-y-1 list-decimal list-inside">
-              <li>Scan QR code or copy UPI ID</li>
-              <li>Pay ${paymentInfo.amount} via Google Pay/PhonePe/Paytm</li>
-              <li>Enter transaction ID below</li>
-              <li>Wait for admin verification (within 24 hours)</li>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+            <p className="text-xs text-yellow-800 font-medium mb-1">📱 Payment Instructions:</p>
+            <ol className="text-xs text-yellow-700 space-y-0.5 list-decimal list-inside">
+              {paymentInfo.method === 'upi' ? (
+                <>
+                  <li>Scan QR code or click "Pay via UPI App"</li>
+                  <li>Pay {paymentInfo.currencySymbol}{paymentInfo.amount} via UPI</li>
+                  <li>Enter transaction ID/UTR below</li>
+                  <li>Wait for verification (within 24 hours)</li>
+                </>
+              ) : paymentInfo.method === 'paypal' ? (
+                <>
+                  <li>Click "Pay with PayPal" button</li>
+                  <li>Complete {paymentInfo.currencySymbol}{paymentInfo.amount} payment</li>
+                  <li>Enter transaction ID below</li>
+                  <li>Wait for verification (within 24 hours)</li>
+                </>
+              ) : (
+                <>
+                  <li>Make payment using provided details</li>
+                  <li>Pay {paymentInfo.currencySymbol}{paymentInfo.amount}</li>
+                  <li>Enter transaction ID below</li>
+                  <li>Wait for verification (within 24 hours)</li>
+                </>
+              )}
             </ol>
           </div>
 
           {/* Transaction ID Input */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Transaction ID / UTR Number *
+          <div className="mb-3">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
+              {paymentInfo.method === 'paypal' ? 'PayPal Transaction ID *' : 'Transaction ID / UTR Number *'}
             </label>
             <input
               type="text"
               value={transactionId}
               onChange={(e) => setTransactionId(e.target.value)}
-              placeholder="Enter 12-digit transaction ID"
-              className="input"
+              placeholder={paymentInfo.method === 'paypal' ? 'Enter PayPal transaction ID' : 'Enter 12-digit transaction ID'}
+              className="input text-sm"
             />
             <p className="text-xs text-gray-500 mt-1">
               You'll receive this after successful payment
@@ -167,12 +157,12 @@ function PaymentModal({ isOpen, onClose, paymentInfo, onPaymentSubmitted }) {
           <button
             onClick={handleSubmit}
             disabled={submitting || !transactionId.trim()}
-            className="btn btn-primary w-full"
+            className="btn btn-primary w-full text-sm py-2"
           >
             {submitting ? 'Submitting...' : 'Submit Payment Proof'}
           </button>
 
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-gray-500 text-center mt-2">
             Your automation will be activated within 24 hours after verification
           </p>
         </div>
