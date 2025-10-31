@@ -687,7 +687,7 @@ function Dashboard() {
               <span className="text-blue-800">
                 Connect LinkedIn Account
                 {!connected && (
-                  <Link to="/linkedin" className="ml-2 underline">Connect now</Link>
+                  <Link to="/app/linkedin" className="ml-2 underline">Connect now</Link>
                 )}
               </span>
             </div>

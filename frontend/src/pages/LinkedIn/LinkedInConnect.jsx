@@ -45,6 +45,7 @@ function LinkedInConnect() {
     setDisconnecting(true);
     try {
       await disconnect();
+      await checkStatus(); // Refresh the status after disconnect
       toast.success('LinkedIn account disconnected');
     } catch (error) {
       toast.error('Failed to disconnect LinkedIn account');

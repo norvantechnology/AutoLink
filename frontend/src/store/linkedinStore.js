@@ -16,7 +16,7 @@ const useLinkedInStore = create((set) => ({
         loading: false,
       });
     } catch (error) {
-      console.error('Failed to check LinkedIn status:', error);
+      console.error('[FRONTEND] Failed to check LinkedIn status:', error);
       set({ loading: false });
     }
   },
@@ -35,10 +35,10 @@ const useLinkedInStore = create((set) => ({
   // Disconnect LinkedIn account
   disconnect: async () => {
     try {
-      await linkedinAPI.disconnect();
+      const response = await linkedinAPI.disconnect();
       set({ connected: false, account: null });
     } catch (error) {
-      console.error('Failed to disconnect LinkedIn:', error);
+      console.error('[FRONTEND] Failed to disconnect LinkedIn:', error);
       throw error;
     }
   },

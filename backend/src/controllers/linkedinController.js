@@ -9,7 +9,8 @@ export const getLinkedInAuthUrl = async (req, res) => {
   try {
     const state = Buffer.from(JSON.stringify({ userId: req.user._id })).toString('base64');
     
-    const authUrl = `${linkedinConfig.authUrl}?response_type=code&client_id=${linkedinConfig.clientId}&redirect_uri=${encodeURIComponent(linkedinConfig.redirectUri)}&state=${state}&scope=${encodeURIComponent(linkedinConfig.scope)}`;
+    // Add prompt=consent to force re-authorization even if previously authorized
+    const authUrl = `${linkedinConfig.authUrl}?response_type=code&client_id=${linkedinConfig.clientId}&redirect_uri=${encodeURIComponent(linkedinConfig.redirectUri)}&state=${state}&scope=${encodeURIComponent(linkedinConfig.scope)}&prompt=consent`;
 
     res.status(200).json({
       success: true,
@@ -104,18 +105,24 @@ export const linkedInCallback = async (req, res) => {
 // @access  Private
 export const getLinkedInStatus = async (req, res) => {
   try {
+    
+    // Check how many accounts exist for this user
+    const accountCount = await LinkedInAccount.countDocuments({ userId: req.user._id });
+    
     const linkedInAccount = await LinkedInAccount.findOne({ userId: req.user._id });
 
     if (!linkedInAccount) {
       return res.status(200).json({
         success: true,
-        connected: false
+        connected: false,
+        accountCount: 0
       });
     }
 
     res.status(200).json({
       success: true,
       connected: true,
+      accountCount: accountCount,
       account: {
         linkedInId: linkedInAccount.linkedInId,
         profileData: linkedInAccount.profileData,
@@ -123,7 +130,7 @@ export const getLinkedInStatus = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get LinkedIn status error:', error);
+    console.error('[STATUS] Error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get LinkedIn status'
@@ -136,14 +143,41 @@ export const getLinkedInStatus = async (req, res) => {
 // @access  Private
 export const disconnectLinkedIn = async (req, res) => {
   try {
-    await LinkedInAccount.findOneAndDelete({ userId: req.user._id });
+    
+    // First, find all LinkedIn accounts for this user to revoke tokens
+    const linkedInAccounts = await LinkedInAccount.find({ userId: req.user._id });
+    
+    // Revoke each access token before deleting
+    for (const account of linkedInAccounts) {
+      try {
+        const decryptedToken = account.getDecryptedAccessToken();
+        
+        // LinkedIn token revocation endpoint
+        await axios.post('https://www.linkedin.com/oauth/v2/revoke', 
+          `token=${decryptedToken}&client_id=${linkedinConfig.clientId}&client_secret=${linkedinConfig.clientSecret}`,
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+        );
+      } catch (revokeError) {
+        // Log but don't fail if token revocation fails (token might be expired)
+        console.warn(`[DISCONNECT] Failed to revoke token for ${account.linkedInId}:`, revokeError.message);
+      }
+    }
+    
+    // Now delete the accounts from database
+    const result = await LinkedInAccount.deleteMany({ userId: req.user._id });
+    
 
     res.status(200).json({
       success: true,
-      message: 'LinkedIn account disconnected successfully'
+      message: `LinkedIn account(s) disconnected successfully. Deleted ${result.deletedCount} account(s)`,
+      deletedCount: result.deletedCount
     });
   } catch (error) {
-    console.error('Disconnect LinkedIn error:', error);
+    console.error('[DISCONNECT] Error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to disconnect LinkedIn account'

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Linkedin, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock, CheckCircle, ArrowRight, Mail, Star, Shield, Sparkles, Target, Award, Globe, Heart, Rocket, DollarSign, TrendingDown } from 'lucide-react';
 import { paymentAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 import SEO from '../../components/SEO';
+import useAuthStore from '../../store/authStore';
 
 function Home() {
+  const navigate = useNavigate();
+  const { isAuthenticated, token } = useAuthStore();
   const [pricing, setPricing] = useState(null);
   const [currency, setCurrency] = useState('USD');
   const [loading, setLoading] = useState(true);
@@ -25,6 +28,16 @@ function Home() {
 
     fetchPricing();
   }, [currency]);
+
+  // Handle Get Started button click - redirect to dashboard if logged in
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    if (isAuthenticated || token) {
+      navigate('/app/dashboard');
+    } else {
+      navigate('/signup');
+    }
+  };
   const features = [
     {
       icon: Bot,
@@ -204,13 +217,13 @@ function Home() {
             </Link>
 
             {/* CTA Button - Responsive */}
-            <Link
-              to="/signup"
+            <button
+              onClick={handleGetStarted}
               className="btn btn-primary px-4 py-2 sm:px-6 sm:py-3 flex items-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all animate-glow rounded-lg sm:rounded-xl bg-gradient-to-r from-linkedin to-blue-600 text-white text-sm sm:text-base"
             >
               <span className="font-bold">Get Started</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
@@ -247,14 +260,14 @@ function Home() {
             Join 500+ professionals who've transformed their LinkedIn presence while focusing on what really matters—growing their business.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4">
-            <Link
-              to="/signup"
+            <button
+              onClick={handleGetStarted}
               className="btn btn-primary px-8 sm:px-10 py-4 sm:py-5 text-lg sm:text-xl flex items-center justify-center space-x-2 bg-white text-linkedin hover:bg-blue-50 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 animate-glow rounded-xl"
             >
               <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
               <span className="font-bold">Get Started Free</span>
               <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Link>
+            </button>
             <Link
               to="/login"
               className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium text-white hover:text-blue-100 transition-colors text-center"
@@ -408,14 +421,14 @@ function Home() {
 
           {/* CTA after How It Works */}
           <div className="text-center mt-16">
-            <Link
-              to="/signup"
+            <button
+              onClick={handleGetStarted}
               className="inline-flex items-center space-x-3 bg-gradient-to-r from-linkedin to-blue-600 text-white px-12 py-5 rounded-2xl text-xl font-bold hover:from-blue-600 hover:to-linkedin transition-all shadow-2xl hover:shadow-3xl transform hover:scale-110 animate-glow"
             >
               <Rocket className="w-6 h-6" />
               <span>Get Started Now</span>
               <ArrowRight className="w-6 h-6" />
-            </Link>
+            </button>
             <p className="text-sm text-gray-500 mt-6 flex items-center justify-center flex-wrap gap-3">
               <span className="inline-flex items-center space-x-1">
                 <Clock className="w-4 h-4 text-blue-500" />
@@ -669,8 +682,8 @@ function Home() {
                         </li>
                       </ul>
                       
-                      <Link
-                        to="/signup"
+                      <button
+                        onClick={handleGetStarted}
                         className={`block w-full text-center py-4 px-6 font-bold rounded-xl transition-all transform hover:scale-105 relative z-10 ${
                           isPopular
                             ? 'bg-white text-linkedin hover:bg-blue-50 shadow-xl hover:shadow-2xl'
@@ -678,7 +691,7 @@ function Home() {
                         }`}
                       >
                         {isPopular ? '🚀 Get Started Now' : 'Get Started'}
-                      </Link>
+                      </button>
                     </div>
                   );
                 })}
@@ -696,9 +709,9 @@ function Home() {
           ) : (
             <div className="text-center text-gray-600 py-12">
               <p className="text-lg mb-4">Unable to load pricing at this moment.</p>
-              <Link to="/signup" className="btn btn-primary">
+              <button onClick={handleGetStarted} className="btn btn-primary">
                 Get Started Anyway
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -725,14 +738,14 @@ function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center mb-6 sm:mb-8 px-4">
-            <Link
-              to="/signup"
+            <button
+              onClick={handleGetStarted}
               className="inline-flex items-center justify-center space-x-2 bg-white text-linkedin px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl font-bold hover:bg-blue-50 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
             >
               <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
               <span>Get Started Now</span>
               <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Link>
+            </button>
           </div>
 
           <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-blue-100 text-xs sm:text-sm px-4">
