@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Linkedin, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useLinkedInStore from '../../store/linkedinStore';
 
 function LinkedInConnect() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { connected, account, loading, checkStatus, connect, disconnect } = useLinkedInStore();
   const [disconnecting, setDisconnecting] = useState(false);
 
@@ -17,12 +18,16 @@ function LinkedInConnect() {
     const error = searchParams.get('error');
 
     if (status === 'connected') {
-      toast.success('LinkedIn account connected successfully!');
+      toast.success('LinkedIn account connected successfully! Redirecting to dashboard...');
       checkStatus();
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => {
+        navigate('/app/dashboard');
+      }, 2000);
     } else if (error) {
       toast.error('Failed to connect LinkedIn account');
     }
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   const handleConnect = async () => {
     try {
