@@ -191,25 +191,25 @@ function Home() {
       {/* SEO Meta Tags */}
       <SEO page="home" />
       
-      {/* Navigation - Glass Morphism */}
+      {/* Navigation - Clean & Simple */}
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg z-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-18">
+          <div className="flex justify-between items-center h-16 sm:h-18">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-linkedin to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Linkedin className="w-6 h-6 text-white" />
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-linkedin to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                <Linkedin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">LinkedOra</span>
-            </div>
+              <span className="text-xl sm:text-2xl font-bold text-gray-900">LinkedOra</span>
+            </Link>
 
-            {/* CTA Button - Premium Glow */}
+            {/* CTA Button - Responsive */}
             <Link
               to="/signup"
-              className="btn btn-primary px-6 py-3 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all animate-glow rounded-xl bg-gradient-to-r from-linkedin to-blue-600"
+              className="btn btn-primary px-4 py-2 sm:px-6 sm:py-3 flex items-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all animate-glow rounded-lg sm:rounded-xl bg-gradient-to-r from-linkedin to-blue-600 text-white text-sm sm:text-base"
             >
               <span className="font-bold">Start Free Trial</span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
           </div>
         </div>
@@ -234,47 +234,47 @@ function Home() {
           <Users className="absolute top-1/3 left-16 w-12 h-12 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '2.5s', animationDuration: '8.5s', transform: 'translateZ(45px)' }} />
         </div>
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
+        <div className="max-w-7xl mx-auto text-center relative z-10 px-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
             Your LinkedIn, On
             <br />
             <span className="text-blue-200">Complete Autopilot</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-blue-100 mb-4 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-3 sm:mb-4 max-w-3xl mx-auto leading-relaxed px-2">
             Stop spending 10+ hours weekly on LinkedIn content. Our AI creates, schedules, and posts engaging content automatically—3 times every single day.
           </p>
-          <p className="text-lg text-blue-200 mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-blue-200 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
             Join 500+ professionals who've transformed their LinkedIn presence while focusing on what really matters—growing their business.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4">
             <Link
               to="/signup"
-              className="btn btn-primary px-10 py-5 text-xl flex items-center space-x-2 bg-white text-linkedin hover:bg-blue-50 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 animate-glow rounded-xl"
+              className="btn btn-primary px-8 sm:px-10 py-4 sm:py-5 text-lg sm:text-xl flex items-center justify-center space-x-2 bg-white text-linkedin hover:bg-blue-50 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 animate-glow rounded-xl"
             >
-              <Rocket className="w-6 h-6" />
-              <span>Get Started Free</span>
-              <ArrowRight className="w-6 h-6" />
+              <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="font-bold">Get Started Free</span>
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </Link>
             <Link
               to="/login"
-              className="px-8 py-4 text-lg font-medium text-white hover:text-blue-100 transition-colors"
+              className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium text-white hover:text-blue-100 transition-colors text-center"
             >
               Already have an account? Sign in
             </Link>
           </div>
           
           {/* Trust Indicators */}
-          <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-blue-100">
+          <div className="mt-8 sm:mt-12 flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-blue-100 text-sm sm:text-base px-4">
             <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>No Credit Card Required</span>
             </div>
             <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>Free Trial Available</span>
             </div>
             <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>Cancel Anytime</span>
             </div>
           </div>
