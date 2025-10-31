@@ -1,38 +1,181 @@
+# ============================================================================
+# LinkedOra - Comprehensive .gitignore
+# All project exclusions in one file
+# ============================================================================
+
+# ============================================================================
 # Dependencies
+# ============================================================================
 node_modules/
 */node_modules/
+**/node_modules/
+package-lock.json.bak
+yarn.lock.bak
 
-# Environment variables
+# ============================================================================
+# Environment Variables & Secrets
+# ============================================================================
 .env
 .env.local
+.env.development
+.env.test
+.env.production
 .env.*.local
+.env.backup
+.env.old
+
+# Keep example files
 !.env.example
 !backend/.env.example
+!frontend/.env.example
 
-# Google Cloud credentials
+# ============================================================================
+# Google Cloud & AWS Credentials
+# ============================================================================
 *.json
 backend/*.json
 !backend/package.json
 !backend/package-lock.json
+!backend/src/config/*.json
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/vercel.json
 
-# OS files
-.DS_Store
-Thumbs.db
+# AWS
+*.pem
+*.key
+*.crt
+AutoLink.pem
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# ============================================================================
+# Build Outputs
+# ============================================================================
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+*.local
 
+# ============================================================================
 # Logs
+# ============================================================================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.npm
+.eslintcache
 
-# Build outputs
-dist/
-build/
+# ============================================================================
+# Operating System Files
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
 
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================================
+# IDE & Editor Files
+# ============================================================================
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# JetBrains (WebStorm, IntelliJ, etc)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+*~
+
+# Emacs
+\#*\#
+.\#*
+
+# ============================================================================
+# Testing & Coverage
+# ============================================================================
+coverage/
+*.lcov
+.nyc_output
+.coverage
+htmlcov/
+junit.xml
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.temp
+*.bak
+*.cache
+.cache/
+tmp/
+temp/
+
+# ============================================================================
+# Database
+# ============================================================================
+*.sqlite
+*.sqlite3
+*.db
+
+# ============================================================================
+# Deployment & CI/CD
+# ============================================================================
+.vercel
+.netlify
+.firebase/
+.serverless/
+
+# ============================================================================
+# Documentation (Optional - Uncomment to ignore)
+# ============================================================================
+# *.md
+# !README.md
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+# Email templates backup
+emailTemplates.backup.json
+
+# Test images
+test-images/
+uploads/
+
+# PM2
+.pm2/
+
+# ============================================================================
+# END
+# ============================================================================
