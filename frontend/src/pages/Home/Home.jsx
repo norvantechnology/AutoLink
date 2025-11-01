@@ -1,33 +1,89 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Linkedin, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock, CheckCircle, ArrowRight, Mail, Star, Shield, Sparkles, Target, Award, Globe, Heart, Rocket, DollarSign, TrendingDown } from 'lucide-react';
-import { paymentAPI } from '../../services/api';
-import toast from 'react-hot-toast';
+import { Linkedin, Bot, Calendar, TrendingUp, Zap, Users, MessageSquare, BarChart3, Clock, CheckCircle, ArrowRight, Mail, Star, Shield, Sparkles, Target, Award, Globe, Heart, Rocket, DollarSign, TrendingDown, ChevronLeft, ChevronRight, ExternalLink, ThumbsUp } from 'lucide-react';
 import SEO from '../../components/SEO';
 import useAuthStore from '../../store/authStore';
+import { publicAPI } from '../../services/api';
+import './Home.css';
 
 function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, token } = useAuthStore();
-  const [pricing, setPricing] = useState(null);
-  const [currency, setCurrency] = useState('USD');
-  const [loading, setLoading] = useState(true);
+  const [topPosts, setTopPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const scrollContainerRef = useRef(null);
+  const autoScrollRef = useRef(null);
 
+  // Fetch top performing posts
   useEffect(() => {
-    const fetchPricing = async () => {
+    const fetchTopPosts = async () => {
       try {
-        const response = await paymentAPI.getPricing(currency);
-        setPricing(response.data);
+        const response = await publicAPI.getTopPosts();
+        if (response.data.success && response.data.posts.length > 0) {
+          setTopPosts(response.data.posts);
+        }
       } catch (error) {
-        console.error('Failed to fetch pricing:', error);
-        toast.error('Failed to load pricing');
+        console.error('Error fetching top posts:', error);
       } finally {
-        setLoading(false);
+        setLoadingPosts(false);
       }
     };
 
-    fetchPricing();
-  }, [currency]);
+    fetchTopPosts();
+  }, []);
+
+  // Auto-scroll functionality - scroll by 3 cards
+  useEffect(() => {
+    if (topPosts.length === 0) return;
+
+    const maxSlide = Math.ceil(topPosts.length / 3) - 1;
+    
+    autoScrollRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+    }, 5000); // Auto-scroll every 5 seconds
+
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+    };
+  }, [topPosts.length]);
+
+  const maxSlide = Math.ceil(topPosts.length / 3) - 1;
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+    // Reset auto-scroll timer
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+      }, 5000);
+    }
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev <= 0 ? maxSlide : prev - 1));
+    // Reset auto-scroll timer
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+      }, 5000);
+    }
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    // Reset auto-scroll timer
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+      }, 5000);
+    }
+  };
 
   // Handle Get Started button click - redirect to dashboard if logged in
   const handleGetStarted = (e) => {
@@ -200,124 +256,223 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="page-container">
       {/* SEO Meta Tags */}
       <SEO page="home" />
       
       {/* Navigation - Clean & Simple */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg z-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-18">
+      <nav className="nav-bar">
+        <div className="nav-container">
+          <div className="nav-content">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-linkedin to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
-                <Linkedin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <Link to="/" className="nav-logo-link">
+              <div className="nav-logo-icon">
+                <Linkedin className="icon-md icon-white" />
               </div>
-              <span className="text-xl sm:text-2xl font-bold text-gray-900">LinkedOra</span>
+              <span className="nav-logo-text">LinkedOra</span>
             </Link>
 
             {/* CTA Button - Responsive */}
-            <button
-              onClick={handleGetStarted}
-              className="btn btn-primary px-4 py-2 sm:px-6 sm:py-3 flex items-center space-x-1 sm:space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all animate-glow rounded-lg sm:rounded-xl bg-gradient-to-r from-linkedin to-blue-600 text-white text-sm sm:text-base"
-            >
-              <span className="font-bold">Get Started</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <button onClick={handleGetStarted} className="nav-cta-btn">
+              <span>Get Started</span>
+              <ArrowRight className="icon-sm" />
             </button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section - Premium 3D Effect */}
-      <section className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-br from-linkedin via-blue-600 to-linkedin-dark animate-gradient">
+      <section className="hero-section animate-gradient">
         {/* Animated Mesh Gradient Background */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+        <div className="hero-bg-gradient">
+          <div className="hero-blob-1"></div>
+          <div className="hero-blob-2"></div>
+          <div className="hero-blob-3"></div>
         </div>
 
         {/* Floating 3D Icons with Depth */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none parallax-3d">
-          <Linkedin className="absolute top-20 left-10 w-16 h-16 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '0s', animationDuration: '6s', transform: 'translateZ(50px)' }} />
-          <Bot className="absolute top-40 right-20 w-20 h-20 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '1s', animationDuration: '7s', transform: 'translateZ(30px)' }} />
-          <Calendar className="absolute bottom-32 left-20 w-18 h-18 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '2s', animationDuration: '8s', transform: 'translateZ(40px)' }} />
-          <TrendingUp className="absolute top-1/4 right-10 w-14 h-14 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '0.5s', animationDuration: '6.5s', transform: 'translateZ(60px)' }} />
-          <Zap className="absolute bottom-20 right-32 w-16 h-16 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '1.5s', animationDuration: '7.5s', transform: 'translateZ(35px)' }} />
-          <Users className="absolute top-1/3 left-16 w-12 h-12 text-white/20 animate-float drop-shadow-2xl" style={{ animationDelay: '2.5s', animationDuration: '8.5s', transform: 'translateZ(45px)' }} />
+        <div className="hero-icons">
+          <Linkedin className="hero-icon animate-float" style={{ top: '5rem', left: '2.5rem', width: '4rem', height: '4rem', animationDelay: '0s', animationDuration: '6s' }} />
+          <Bot className="hero-icon animate-float" style={{ top: '10rem', right: '5rem', width: '5rem', height: '5rem', animationDelay: '1s', animationDuration: '7s' }} />
+          <Calendar className="hero-icon animate-float" style={{ bottom: '8rem', left: '5rem', width: '4.5rem', height: '4.5rem', animationDelay: '2s', animationDuration: '8s' }} />
+          <TrendingUp className="hero-icon animate-float" style={{ top: '25%', right: '2.5rem', width: '3.5rem', height: '3.5rem', animationDelay: '0.5s', animationDuration: '6.5s' }} />
+          <Zap className="hero-icon animate-float" style={{ bottom: '5rem', right: '8rem', width: '4rem', height: '4rem', animationDelay: '1.5s', animationDuration: '7.5s' }} />
+          <Users className="hero-icon animate-float" style={{ top: '33%', left: '4rem', width: '3rem', height: '3rem', animationDelay: '2.5s', animationDuration: '8.5s' }} />
         </div>
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 px-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+        <div className="hero-content">
+          <h1 className="hero-title">
             Your LinkedIn, On
             <br />
-            <span className="text-blue-200">Complete Autopilot</span>
+            <span className="hero-title-accent">Complete Autopilot</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-3 sm:mb-4 max-w-3xl mx-auto leading-relaxed px-2">
+          <p className="hero-subtitle">
             Stop spending 10+ hours weekly on LinkedIn content. Our AI creates, schedules, and posts engaging content automatically—3 times every single day.
           </p>
-          <p className="text-base sm:text-lg text-blue-200 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
+          <p className="hero-description">
             Join 500+ professionals who've transformed their LinkedIn presence while focusing on what really matters—growing their business.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4">
-            <button
-              onClick={handleGetStarted}
-              className="btn btn-primary px-8 sm:px-10 py-4 sm:py-5 text-lg sm:text-xl flex items-center justify-center space-x-2 bg-white text-linkedin hover:bg-blue-50 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 animate-glow rounded-xl"
-            >
-              <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
-              <span className="font-bold">Get Started Free</span>
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="hero-cta-container">
+            <button onClick={handleGetStarted} className="hero-cta-primary">
+              <Rocket className="icon-md" />
+              <span>Get Started Free</span>
+              <ArrowRight className="icon-md" />
             </button>
-            <Link
-              to="/login"
-              className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium text-white hover:text-blue-100 transition-colors text-center"
-            >
+            <Link to="/login" className="hero-secondary-link">
               Already have an account? Sign in
             </Link>
           </div>
           
           {/* Trust Indicators */}
-          <div className="mt-8 sm:mt-12 flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-blue-100 text-sm sm:text-base px-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="hero-trust-indicators">
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" />
               <span>Trusted by 500+ Professionals</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" />
               <span>4.9/5 Star Rating</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" />
               <span>24/7 Automation</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Real Results Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Proven Results</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              Real Impact, Real Numbers
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              See the average results our users achieve within the first 90 days
-            </p>
+      {/* Example Posts Showcase Section - Real Posts from DB - MOVED TO TOP */}
+      <section className="section-sm bg-gradient-soft">
+        <div className="container-max">
+          <div className="section-header">
+            <span className="section-badge">See It In Action</span>
+            <h2 className="section-title">Real Posts Generated by Our AI</h2>
+            <p className="section-subtitle">Top performing posts from our users—engaging, professional content that drives real results</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {realResults.map((result, index) => (
-              <div key={index} className="text-center p-4 sm:p-6 md:p-8 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl sm:rounded-2xl border-2 border-linkedin/20 hover:border-linkedin shadow-lg hover:shadow-2xl card-3d group relative overflow-hidden">
-                {/* Animated gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-linkedin/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div className="relative z-10">
-                  <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-linkedin to-blue-600 bg-clip-text text-transparent mb-2 sm:mb-3 group-hover:scale-110 transition-transform">{result.metric}</div>
-                  <div className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-linkedin transition-colors">{result.label}</div>
-                  <div className="text-xs sm:text-sm text-gray-600 hidden sm:block">{result.description}</div>
+          {loadingPosts ? (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p className="loading-text">Loading amazing posts...</p>
+            </div>
+          ) : topPosts.length > 0 && (
+            <div className="carousel-wrapper">
+              {/* Carousel Container */}
+              <div className="carousel-container">
+                <div 
+                  className="carousel-track"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {topPosts.map((post, index) => (
+                    <div 
+                      key={post.id} 
+                      className="carousel-slide"
+                    >
+                      <div className="card-3d post-card">
+                        <div className="post-card-inner">
+                          {/* Topic Badge & LinkedIn Link */}
+                          <div className="post-header">
+                            <span className="topic-badge">
+                              {post.topic.name}
+                            </span>
+                            <a
+                              href={post.linkedInUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="view-btn"
+                            >
+                              <span>View</span>
+                              <ExternalLink className="icon-xs" />
+                            </a>
+                          </div>
+                          
+                          {/* Post Content */}
+                          <div className="post-content">
+                            <p className="post-text">
+                              {post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content}
+                            </p>
+                            {post.hashtags && post.hashtags.length > 0 && (
+                              <div className="hashtag-container">
+                                {post.hashtags.slice(0, 3).map((tag, idx) => (
+                                  <span key={idx} className="hashtag">
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Post Image if exists */}
+                          {post.imageUrl && (
+                            <div className="post-image-container">
+                              <img 
+                                src={post.imageUrl} 
+                                alt="Post visual"
+                                className="post-image"
+                                loading="lazy"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
+
+              {/* Navigation Arrows */}
+              {topPosts.length > 3 && (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    className="btn-nav-arrow btn-nav-left"
+                    aria-label="Previous posts"
+                  >
+                    <ChevronLeft className="icon-nav" />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="btn-nav-arrow btn-nav-right"
+                    aria-label="Next posts"
+                  >
+                    <ChevronRight className="icon-nav" />
+                  </button>
+                </>
+              )}
+
+              {/* Dots Navigation */}
+              {topPosts.length > 3 && (
+                <div className="carousel-dots">
+                  {Array.from({ length: Math.ceil(topPosts.length / 3) }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      className={`dot ${index === currentSlide ? 'active' : ''}`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Real Results Section */}
+      <section className="section-sm bg-white">
+        <div className="container-max">
+          <div className="section-header">
+            <span className="section-badge">Proven Results</span>
+            <h2 className="section-title-lg">Real Impact, Real Numbers</h2>
+            <p className="section-subtitle">See the average results our users achieve within the first 90 days</p>
+          </div>
+
+          <div className="grid-results">
+            {realResults.map((result, index) => (
+              <div key={index} className="result-card">
+                <div className="result-metric">{result.metric}</div>
+                <div className="result-label">{result.label}</div>
+                <div className="result-description">{result.description}</div>
               </div>
             ))}
           </div>
@@ -325,60 +480,66 @@ function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Powerful Features</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              Everything You Need to Dominate LinkedIn
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              Advanced tools and automation that put your LinkedIn growth on steroids
-            </p>
+      <section className="section-md bg-gray-50">
+        <div className="container-max">
+          <div className="section-header">
+            <span className="section-badge">Powerful Features</span>
+            <h2 className="section-title-lg">Everything You Need to Dominate LinkedIn</h2>
+            <p className="section-subtitle">Advanced tools and automation that put your LinkedIn growth on steroids</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid-features">
             {features.slice(0, 6).map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={index}
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl card-3d group relative overflow-hidden"
-                >
-                  {/* Shimmer effect on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
-                  
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 bg-gradient-to-br from-linkedin via-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-5 shadow-xl group-hover:shadow-2xl transition-all group-hover:scale-110 group-hover:rotate-3">
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-linkedin transition-colors">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <div key={index} className="feature-card">
+                  <div className="feature-icon">
+                    <Icon className="icon-lg icon-white" />
                   </div>
+                  <h3 className="feature-title">{feature.title}</h3>
+                  <p className="feature-description">{feature.description}</p>
                 </div>
               );
             })}
           </div>
 
           {/* Additional Features - Premium 3D Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mt-6 sm:mt-8">
+          <div className="grid-features" style={{ marginTop: '1.5rem' }}>
             {features.slice(6).map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={index}
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl card-3d group relative overflow-hidden"
-                >
-                  {/* Shimmer effect on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
-                  
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 bg-gradient-to-br from-linkedin via-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-5 shadow-xl group-hover:shadow-2xl transition-all group-hover:scale-110 group-hover:rotate-3">
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-linkedin transition-colors">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <div key={index} className="feature-card">
+                  <div className="feature-icon">
+                    <Icon className="icon-lg icon-white" />
                   </div>
+                  <h3 className="feature-title">{feature.title}</h3>
+                  <p className="feature-description">{feature.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases Section */}
+      <section className="section-md bg-white">
+        <div className="container-max">
+          <div className="section-header">
+            <span className="section-badge">Perfect For</span>
+            <h2 className="section-title-lg">Built for Every Professional</h2>
+            <p className="section-subtitle">Whether you're building a personal brand or growing your business, LinkedOra works for you</p>
+          </div>
+
+          <div className="grid-use-cases">
+            {useCases.map((useCase, index) => {
+              const Icon = useCase.icon;
+              return (
+                <div key={index} className="use-case-card">
+                  <div className="use-case-icon">
+                    <Icon className="icon-md icon-white" />
+                  </div>
+                  <h3 className="use-case-title">{useCase.title}</h3>
+                  <p className="use-case-description">{useCase.description}</p>
                 </div>
               );
             })}
@@ -387,56 +548,46 @@ function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Simple Process</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              From Setup to Success in 4 Easy Steps
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 px-4">
-              Get your LinkedIn automation running in less than 5 minutes
-            </p>
+      <section className="section-md bg-gray-50">
+        <div className="container-max">
+          <div className="section-header">
+            <span className="section-badge">Simple Process</span>
+            <h2 className="section-title">From Setup to Success in 4 Easy Steps</h2>
+            <p className="section-subtitle">Get your LinkedIn automation running in less than 5 minutes</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid-steps">
             {howItWorks.map((item, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="step-container">
                 {index < howItWorks.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 right-0 w-full h-1 animated-border rounded-full transform translate-x-1/2 opacity-40"></div>
+                  <div className="step-connector"></div>
                 )}
-                <div className="relative bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl card-3d group">
-                  {/* Premium step circle with glow */}
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-linkedin via-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold mx-auto mb-4 sm:mb-6 shadow-2xl relative z-10 group-hover:scale-110 transition-transform animate-glow">
+                <div className="step-card">
+                  <div className="step-circle">
                     {item.step}
-                    {/* Inner glow ring */}
-                    <div className="absolute inset-2 rounded-full border-2 border-white/30"></div>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-linkedin transition-colors">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{item.description}</p>
+                  <h3 className="step-title">{item.title}</h3>
+                  <p className="step-description">{item.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* CTA after How It Works */}
-          <div className="text-center mt-16">
-            <button
-              onClick={handleGetStarted}
-              className="inline-flex items-center space-x-3 bg-gradient-to-r from-linkedin to-blue-600 text-white px-12 py-5 rounded-2xl text-xl font-bold hover:from-blue-600 hover:to-linkedin transition-all shadow-2xl hover:shadow-3xl transform hover:scale-110 animate-glow"
-            >
-              <Rocket className="w-6 h-6" />
+          <div className="cta-container-centered">
+            <button onClick={handleGetStarted} className="btn-primary-gradient">
+              <Rocket className="icon-md" />
               <span>Get Started Now</span>
-              <ArrowRight className="w-6 h-6" />
+              <ArrowRight className="icon-md" />
             </button>
-            <p className="text-sm text-gray-500 mt-6 flex items-center justify-center flex-wrap gap-3">
-              <span className="inline-flex items-center space-x-1">
-                <Clock className="w-4 h-4 text-blue-500" />
+            <p className="cta-note">
+              <span className="cta-note-item">
+                <Clock className="icon-sm" style={{ color: '#3b82f6' }} />
                 <span>Setup in 5 minutes</span>
               </span>
               <span>•</span>
-              <span className="inline-flex items-center space-x-1">
-                <Shield className="w-4 h-4 text-purple-500" />
+              <span className="cta-note-item">
+                <Shield className="icon-sm" style={{ color: '#a855f7' }} />
                 <span>Secure & Professional</span>
               </span>
             </p>
@@ -444,80 +595,39 @@ function Home() {
         </div>
       </section>
 
-
-      {/* Use Cases Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Perfect For</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              Built for Every Professional
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              Whether you're building a personal brand or growing your business, LinkedOra works for you
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {useCases.map((useCase, index) => {
-              const Icon = useCase.icon;
-              return (
-                <div key={index} className="p-5 sm:p-6 md:p-7 bg-gradient-to-br from-white via-blue-50/30 to-white rounded-xl sm:rounded-2xl border-2 border-gray-200 hover:border-linkedin hover:shadow-xl card-3d group relative overflow-hidden">
-                  {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-linkedin/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-linkedin to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all">
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-linkedin transition-colors">{useCase.title}</h3>
-                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{useCase.description}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Benefits Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-linkedin to-linkedin-dark relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+      <section className="section-md bg-linkedin-gradient">
+        <div className="bg-pattern-overlay">
+          <div className="bg-pattern-dots"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-blue-300 font-semibold text-xs sm:text-sm uppercase tracking-wide">Real Benefits</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 mt-2 px-4">
-              Why Successful Professionals Choose LinkedOra
-            </h2>
-            <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto px-4">
-              Transform your LinkedIn presence and unlock opportunities you never thought possible
-            </p>
+        <div className="container-max relative-z10">
+          <div className="section-header">
+            <span className="section-badge" style={{ color: '#bfdbfe' }}>Real Benefits</span>
+            <h2 className="section-title section-title-white">Why Successful Professionals Choose LinkedOra</h2>
+            <p className="section-subtitle section-subtitle-light">Transform your LinkedIn presence and unlock opportunities you never thought possible</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
+          <div className="grid-benefits">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start space-x-3 sm:space-x-4 bg-white/10 backdrop-blur-sm p-4 sm:p-6 rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all">
-                <div className="flex-shrink-0 mt-0.5">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-400 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <div key={index} className="benefit-item">
+                <div className="benefit-check">
+                  <div className="benefit-check-icon">
+                    <CheckCircle className="icon-sm icon-white" />
                   </div>
                 </div>
                 <div>
-                  <span className="text-white text-base sm:text-lg font-medium leading-relaxed">{benefit.text}</span>
+                  <span className="benefit-text">{benefit.text}</span>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Extra benefit callout */}
-          <div className="mt-8 sm:mt-12 max-w-4xl mx-auto bg-white/20 backdrop-blur-sm p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-white/30 text-center">
-            <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mx-auto mb-3 sm:mb-4" />
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 px-2">Plus: Completely Hands-Free</h3>
-            <p className="text-blue-100 text-base sm:text-lg leading-relaxed px-2">
+          <div className="benefit-callout">
+            <Sparkles className="benefit-callout-icon" />
+            <h3 className="benefit-callout-title">Plus: Completely Hands-Free</h3>
+            <p className="benefit-callout-text">
               Once you set it up, LinkedOra works 24/7 in the background. Wake up to new posts, growing engagement, and expanding network—all without any effort from you.
             </p>
           </div>
@@ -525,30 +635,26 @@ function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">FAQ</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              Common Questions Answered
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 px-4">
-              Everything you need to know about LinkedOra
-            </p>
+      <section className="section-md bg-gray-50">
+        <div className="container-md">
+          <div className="section-header">
+            <span className="section-badge">FAQ</span>
+            <h2 className="section-title">Common Questions Answered</h2>
+            <p className="section-subtitle">Everything you need to know about LinkedOra</p>
           </div>
 
-          <div className="space-y-3 sm:space-y-4">
+          <div className="faq-list">
             {faqs.map((faq, index) => (
-              <details key={index} className="bg-white p-4 sm:p-6 rounded-lg sm:rounded-xl shadow-md group">
-                <summary className="cursor-pointer list-none flex items-start sm:items-center justify-between font-bold text-gray-900 text-base sm:text-lg">
-                  <span className="pr-4">{faq.q}</span>
-                  <span className="text-linkedin group-open:rotate-180 transition-transform flex-shrink-0">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <details key={index} className="faq-item">
+                <summary className="faq-question">
+                  <span className="faq-question-text">{faq.q}</span>
+                  <span className="faq-icon">
+                    <svg className="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </span>
                 </summary>
-                <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 leading-relaxed">{faq.a}</p>
+                <p className="faq-answer">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -556,209 +662,70 @@ function Home() {
       </section>
 
       {/* Social Proof Stats */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white border-y-2 border-gray-100">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 px-4">
-              Trusted by Professionals Worldwide
-            </h2>
+      <section className="section-md bg-white-border">
+        <div className="container-max">
+          <div className="section-header-center">
+            <h2 className="section-title">Trusted by Professionals Worldwide</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
-            <div className="p-2 sm:p-4">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">15,000+</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Posts Generated</div>
-              <div className="text-gray-500 text-xs sm:text-sm mt-1">This Month</div>
+          <div className="grid-stats">
+            <div className="stat-card">
+              <div className="stat-number">15,000+</div>
+              <div className="stat-label">Posts Generated</div>
+              <div className="stat-sublabel">This Month</div>
             </div>
-            <div className="p-2 sm:p-4">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">500+</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Active Professionals</div>
-              <div className="text-gray-500 text-xs sm:text-sm mt-1">And Growing</div>
+            <div className="stat-card">
+              <div className="stat-number">500+</div>
+              <div className="stat-label">Active Professionals</div>
+              <div className="stat-sublabel">And Growing</div>
             </div>
-            <div className="p-2 sm:p-4">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">98%</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Satisfaction Rate</div>
-              <div className="text-gray-500 text-xs sm:text-sm mt-1">5-Star Reviews</div>
+            <div className="stat-card">
+              <div className="stat-number">98%</div>
+              <div className="stat-label">Satisfaction Rate</div>
+              <div className="stat-sublabel">5-Star Reviews</div>
             </div>
-            <div className="p-2 sm:p-4">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-linkedin mb-1 sm:mb-2">24/7</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Automation</div>
-              <div className="text-gray-500 text-xs sm:text-sm mt-1">Never Stop Growing</div>
+            <div className="stat-card">
+              <div className="stat-number">24/7</div>
+              <div className="stat-label">Automation</div>
+              <div className="stat-sublabel">Never Stop Growing</div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Dynamic Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span className="text-linkedin font-semibold text-xs sm:text-sm uppercase tracking-wide">Simple Pricing</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 mt-2 px-4">
-              Flexible Plans for Every Need
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 px-4">
-              Transparent pricing with no hidden fees. Cancel anytime, no questions asked.
-            </p>
-          </div>
-
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-linkedin border-t-transparent mx-auto shadow-lg"></div>
-              <p className="text-gray-600 mt-4 font-medium">Loading pricing...</p>
-            </div>
-          ) : pricing && pricing.pricing ? (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
-                {pricing.pricing.map((plan, index) => {
-                  const isPopular = plan.postsPerDay === 3;
-                  return (
-                    <div
-                      key={index}
-                      className={`${
-                        isPopular
-                          ? 'bg-gradient-to-br from-linkedin via-blue-600 to-blue-700 transform scale-105 shadow-2xl animate-glow card-3d'
-                          : 'bg-white shadow-xl hover:shadow-2xl card-3d'
-                      } p-8 rounded-3xl relative group overflow-hidden`}
-                    >
-                      {/* Shimmer effect on hover for non-popular cards */}
-                      {!isPopular && (
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity animate-shimmer"></div>
-                      )}
-                      
-                      {isPopular && (
-                        <>
-                          <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-2xl shadow-lg">
-                            ⭐ MOST POPULAR
-                          </div>
-                          {/* Animated glow ring for popular plan */}
-                          <div className="absolute inset-0 rounded-3xl opacity-50 blur-xl bg-gradient-to-r from-linkedin to-blue-600"></div>
-                        </>
-                      )}
-                      <div className="text-center mb-6 relative z-10">
-                        <h3 className={`text-2xl font-bold mb-2 ${isPopular ? 'text-white' : 'text-gray-900'}`}>
-                          {plan.name}
-                        </h3>
-                        <div className={`text-5xl font-bold mb-2 ${isPopular ? 'text-white' : 'text-gray-900'}`}>
-                          {pricing.currency.symbol}{plan.price}
-                        </div>
-                        <div className={`${isPopular ? 'text-blue-100' : 'text-gray-500'}`}>
-                          per month
-                        </div>
-                        <div className={`mt-2 text-sm ${isPopular ? 'text-blue-200' : 'text-gray-600'}`}>
-                          {plan.postsPerDay} {plan.postsPerDay === 1 ? 'post' : 'posts'} per day
-                        </div>
-                      </div>
-                      
-                      <ul className="space-y-3 mb-8">
-                        <li className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isPopular ? 'text-green-300' : 'text-green-500'}`} />
-                          <span className={isPopular ? 'text-white' : 'text-gray-600'}>
-                            {plan.postsPerDay} AI-generated posts daily
-                          </span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isPopular ? 'text-green-300' : 'text-green-500'}`} />
-                          <span className={isPopular ? 'text-white' : 'text-gray-600'}>
-                            Automated scheduling
-                          </span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isPopular ? 'text-green-300' : 'text-green-500'}`} />
-                          <span className={isPopular ? 'text-white' : 'text-gray-600'}>
-                            Unlimited custom topics
-                          </span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isPopular ? 'text-green-300' : 'text-green-500'}`} />
-                          <span className={isPopular ? 'text-white' : 'text-gray-600'}>
-                            Analytics & insights
-                          </span>
-                        </li>
-                        <li className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isPopular ? 'text-green-300' : 'text-green-500'}`} />
-                          <span className={isPopular ? 'text-white' : 'text-gray-600'}>
-                            Email support
-                          </span>
-                        </li>
-                      </ul>
-                      
-                      <button
-                        onClick={handleGetStarted}
-                        className={`block w-full text-center py-4 px-6 font-bold rounded-xl transition-all transform hover:scale-105 relative z-10 ${
-                          isPopular
-                            ? 'bg-white text-linkedin hover:bg-blue-50 shadow-xl hover:shadow-2xl'
-                            : 'border-2 border-linkedin text-linkedin hover:bg-linkedin hover:text-white shadow-lg hover:shadow-xl'
-                        }`}
-                      >
-                        {isPopular ? '🚀 Get Started Now' : 'Get Started'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="text-center mt-12">
-                <p className="text-gray-600 text-lg mb-4">
-                  💎 All plans include: AI content generation • Auto-scheduling • LinkedIn integration • Full analytics • Email support
-                </p>
-                <p className="text-gray-500">
-                  Prices shown in {pricing.currency.name} ({pricing.currency.symbol})
-                </p>
-              </div>
-            </>
-          ) : (
-            <div className="text-center text-gray-600 py-12">
-              <p className="text-lg mb-4">Unable to load pricing at this moment.</p>
-              <button onClick={handleGetStarted} className="btn btn-primary">
-                Get Started Anyway
-              </button>
-            </div>
-          )}
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-linkedin via-blue-600 to-linkedin-dark relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-300 rounded-full blur-3xl"></div>
+      <section className="cta-section bg-cta-gradient">
+        <div className="bg-blur-overlay">
+          <div className="bg-blur-circle-1"></div>
+          <div className="bg-blur-circle-2"></div>
         </div>
 
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <Sparkles className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-yellow-300 mx-auto mb-4 sm:mb-6" />
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4">
-            Ready to 10x Your LinkedIn Game?
-          </h2>
-          <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-3 sm:mb-4 px-4">
-            Join 500+ professionals who've automated their LinkedIn success
-          </p>
-          <p className="text-base sm:text-lg text-blue-200 mb-8 sm:mb-10 max-w-3xl mx-auto px-4">
+        <div className="cta-content">
+          <Sparkles className="cta-icon" />
+          <h2 className="cta-title">Ready to 10x Your LinkedIn Game?</h2>
+          <p className="cta-subtitle">Join 500+ professionals who've automated their LinkedIn success</p>
+          <p className="cta-description">
             Stop wasting hours on content creation. Start building your brand, generating leads, and growing your network—all on complete autopilot.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center mb-6 sm:mb-8 px-4">
-            <button
-              onClick={handleGetStarted}
-              className="inline-flex items-center justify-center space-x-2 bg-white text-linkedin px-8 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl font-bold hover:bg-blue-50 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
-            >
-              <Rocket className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="cta-button-container">
+            <button onClick={handleGetStarted} className="btn-cta-large">
+              <Rocket className="icon-md" />
               <span>Get Started Now</span>
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ArrowRight className="icon-md" />
             </button>
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-blue-100 text-xs sm:text-sm px-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-300" />
+          <div className="cta-trust">
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" style={{ color: '#4ade80' }} />
               <span>Trusted by 500+ Users</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-300" />
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" style={{ color: '#4ade80' }} />
               <span>Setup in 5 Minutes</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-300" />
+            <div className="trust-item">
+              <CheckCircle className="icon-sm" style={{ color: '#4ade80' }} />
               <span>24/7 Support Available</span>
             </div>
           </div>
@@ -766,94 +733,94 @@ function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center">
-            <div>
-              <Mail className="w-8 h-8 text-linkedin mx-auto mb-3" />
-              <h3 className="font-bold text-gray-900 mb-2">Email Us</h3>
-              <a href="mailto:info@linkedora.com" className="text-linkedin hover:text-linkedin-dark">
+      <section className="section-sm bg-gray-50">
+        <div className="container-max">
+          <div className="contact-grid">
+            <div className="contact-item">
+              <Mail className="contact-icon" />
+              <h3 className="contact-title">Email Us</h3>
+              <a href="mailto:info@linkedora.com" className="contact-link">
                 info@linkedora.com
               </a>
             </div>
-            <div>
-              <Linkedin className="w-8 h-8 text-linkedin mx-auto mb-3" />
-              <h3 className="font-bold text-gray-900 mb-2">Follow Us</h3>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-linkedin hover:text-linkedin-dark">
+            <div className="contact-item">
+              <Linkedin className="contact-icon" />
+              <h3 className="contact-title">Follow Us</h3>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="contact-link">
                 LinkedIn
               </a>
             </div>
-            <div>
-              <Clock className="w-8 h-8 text-linkedin mx-auto mb-3" />
-              <h3 className="font-bold text-gray-900 mb-2">Support</h3>
-              <p className="text-gray-600">24/7 Support Available</p>
+            <div className="contact-item">
+              <Clock className="contact-icon" />
+              <h3 className="contact-title">Support</h3>
+              <p className="contact-text">24/7 Support Available</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-12">
+      <footer className="footer">
+        <div className="container-max">
+          <div className="footer-grid">
             {/* Brand */}
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Linkedin className="w-10 h-10 text-linkedin" />
-                <span className="text-3xl font-bold">LinkedOra</span>
+              <div className="footer-brand">
+                <Linkedin className="footer-brand-icon" />
+                <span className="footer-brand-text">LinkedOra</span>
               </div>
-              <p className="text-gray-400 mb-6 leading-relaxed text-lg">
+              <p className="footer-description">
                 The #1 LinkedIn automation platform trusted by professionals worldwide. Automate your LinkedIn presence with AI-powered content generation and smart scheduling.
               </p>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="flex space-x-1">
+              <div className="footer-rating">
+                <div className="footer-stars">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="footer-star" />
                   ))}
                 </div>
-                <span className="text-gray-400 text-sm">4.9/5 from 500+ reviews</span>
+                <span className="footer-rating-text">4.9/5 from 500+ reviews</span>
               </div>
-              <div className="flex space-x-4 mt-6">
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-800 hover:bg-linkedin rounded-full flex items-center justify-center transition-colors">
-                  <Linkedin className="w-5 h-5" />
+              <div className="footer-social">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <Linkedin className="icon-sm" />
                 </a>
-                <a href="mailto:info@linkedora.com" className="w-10 h-10 bg-gray-800 hover:bg-linkedin rounded-full flex items-center justify-center transition-colors">
-                  <Mail className="w-5 h-5" />
+                <a href="mailto:info@linkedora.com" className="social-icon">
+                  <Mail className="icon-sm" />
                 </a>
               </div>
             </div>
 
             {/* Support & Contact */}
             <div>
-              <h4 className="font-bold text-lg mb-4">Support & Contact</h4>
-              <ul className="space-y-3">
-                <li className="flex items-start space-x-2">
-                  <Mail className="w-5 h-5 text-linkedin flex-shrink-0 mt-0.5" />
+              <h4 className="footer-section-title">Support & Contact</h4>
+              <ul className="footer-list">
+                <li className="footer-list-item">
+                  <Mail className="footer-icon" />
                   <div>
-                    <div className="text-gray-400 text-sm">Email us</div>
-                    <a href="mailto:info@linkedora.com" className="text-white hover:text-linkedin transition-colors">
+                    <div className="footer-label">Email us</div>
+                    <a href="mailto:info@linkedora.com" className="footer-link">
                       info@linkedora.com
                     </a>
                   </div>
                 </li>
-                <li className="flex items-start space-x-2">
-                  <Clock className="w-5 h-5 text-linkedin flex-shrink-0 mt-0.5" />
+                <li className="footer-list-item">
+                  <Clock className="footer-icon" />
                   <div>
-                    <div className="text-gray-400 text-sm">Support Hours</div>
-                    <div className="text-white">24/7 Available</div>
+                    <div className="footer-label">Support Hours</div>
+                    <div className="footer-link">24/7 Available</div>
                   </div>
                 </li>
-                <li className="flex items-start space-x-2">
-                  <Globe className="w-5 h-5 text-linkedin flex-shrink-0 mt-0.5" />
+                <li className="footer-list-item">
+                  <Globe className="footer-icon" />
                   <div>
-                    <div className="text-gray-400 text-sm">Website</div>
-                    <a href="https://www.linkedora.com" className="text-white hover:text-linkedin transition-colors">
+                    <div className="footer-label">Website</div>
+                    <a href="https://www.linkedora.com" className="footer-link">
                       www.linkedora.com
                     </a>
                   </div>
                 </li>
                 <li>
-                  <Link to="/login" className="text-gray-400 hover:text-white transition-colors">
+                  <Link to="/login" className="footer-link-secondary">
                     Login to Dashboard
                   </Link>
                 </li>
@@ -862,17 +829,15 @@ function Home() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="text-gray-400 text-center md:text-left">
-                <p>&copy; {new Date().getFullYear()} LinkedOra. All rights reserved.</p>
-                <p className="text-sm mt-1">Making LinkedIn automation simple, powerful, and effective.</p>
-              </div>
-              <div className="flex space-x-6 text-sm text-gray-400">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
-              </div>
+          <div className="footer-bottom">
+            <div className="footer-copyright">
+              <p className="footer-copyright-text">&copy; {new Date().getFullYear()} LinkedOra. All rights reserved.</p>
+              <p className="footer-copyright-sub">Making LinkedIn automation simple, powerful, and effective.</p>
+            </div>
+            <div className="footer-links">
+              <a href="#" className="footer-link-secondary">Privacy Policy</a>
+              <a href="#" className="footer-link-secondary">Terms of Service</a>
+              <a href="#" className="footer-link-secondary">Cookie Policy</a>
             </div>
           </div>
         </div>
@@ -882,4 +847,3 @@ function Home() {
 }
 
 export default Home;
-

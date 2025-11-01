@@ -129,4 +129,9 @@ export const emailTrackingAPI = {
   getSummary: () => api.get('/email-tracking/summary'),
 };
 
+// Public API (No authentication required)
+export const publicAPI = {
+  getTopPosts: () => api.get('/public/top-posts'),
+};
+
 export default api;
