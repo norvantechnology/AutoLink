@@ -28,7 +28,7 @@ function EmailClickTracker() {
           else if (location.pathname.includes('/app')) page = 'dashboard';
 
           // Send tracking data to backend
-          await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/email-tracking/click`, {
+          await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/email-tracking/click`, {
             email,
             source,
             campaign,
