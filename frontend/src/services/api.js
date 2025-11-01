@@ -122,4 +122,11 @@ export const adminAPI = {
   getAllSubscriptions: () => api.get('/admin/subscriptions'),
 };
 
+// Email Tracking API
+export const emailTrackingAPI = {
+  trackClick: (data) => api.post('/email-tracking/click', data),
+  getAnalytics: () => api.get('/email-tracking/analytics'),
+  getSummary: () => api.get('/email-tracking/summary'),
+};
+
 export default api;

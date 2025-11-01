@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Users, CreditCard, FileText, CheckCircle, Clock, DollarSign, Mail, MousePointer, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { adminAPI } from '../../services/api';
-import axios from 'axios';
+import { adminAPI, emailTrackingAPI } from '../../services/api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
 
@@ -41,14 +40,9 @@ function AdminDashboard() {
 
   const loadEmailAnalytics = async () => {
     try {
-      const token = localStorage.getItem('token');
       const [analyticsRes, summaryRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/email-tracking/analytics', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        axios.get('http://localhost:5000/api/email-tracking/summary', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        emailTrackingAPI.getAnalytics(),
+        emailTrackingAPI.getSummary()
       ]);
       
       setEmailAnalytics(analyticsRes.data.analytics);

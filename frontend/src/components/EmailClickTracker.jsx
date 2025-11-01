@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { emailTrackingAPI } from '../services/api';
 
 /**
  * Email Click Tracker Component
@@ -28,7 +28,7 @@ function EmailClickTracker() {
           else if (location.pathname.includes('/app')) page = 'dashboard';
 
           // Send tracking data to backend
-          await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/email-tracking/click`, {
+          await emailTrackingAPI.trackClick({
             email,
             source,
             campaign,

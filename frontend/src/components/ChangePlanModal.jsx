@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, TrendingUp, Check, Info, Zap, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { paymentAPI } from '../services/api';
 
 function ChangePlanModal({ isOpen, onClose, currentSubscription, currencies, onConfirm }) {
   const [selectedCurrency, setSelectedCurrency] = useState(currentSubscription?.currencyCode || 'USD');
@@ -30,9 +31,8 @@ function ChangePlanModal({ isOpen, onClose, currentSubscription, currencies, onC
 
   const loadPricing = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/payment/pricing/${selectedCurrency}`);
-      const data = await response.json();
-      setPricing(data.pricing);
+      const response = await paymentAPI.getPricing(selectedCurrency);
+      setPricing(response.data.pricing);
     } catch (error) {
       toast.error('Failed to load pricing');
     } finally {
