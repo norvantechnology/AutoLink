@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# CSV files with real contacts (keep example)
+contacts-real.csv
+contacts.csv
+subscribers.csv
+leads.csv
+
+# Progress tracking (don't commit)
+progress.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+

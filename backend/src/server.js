@@ -12,6 +12,7 @@ import automationRoutes from './routes/automationRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import engagementRoutes from './routes/engagementRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import emailTrackingRoutes from './routes/emailTrackingRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -63,6 +64,7 @@ app.use('/api/automation', automationRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/engagement', engagementRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/email-tracking', emailTrackingRoutes);
 
 // 404 handler
 app.use((req, res) => {

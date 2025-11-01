@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import useAuthStore from './store/authStore';
 
+// Components
+import EmailClickTracker from './components/EmailClickTracker';
+
 // Layout
 import Layout from './components/Layout';
 
@@ -59,9 +62,13 @@ function App() {
   }, [loadUser]);
 
   return (
-    <Routes>
-      {/* Landing Page */}
-      <Route path="/" element={<Home />} />
+    <>
+      {/* Email Click Tracker - runs on all pages */}
+      <EmailClickTracker />
+      
+      <Routes>
+        {/* Landing Page */}
+        <Route path="/" element={<Home />} />
 
       {/* Public Routes */}
       <Route
@@ -107,6 +114,7 @@ function App() {
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }
 

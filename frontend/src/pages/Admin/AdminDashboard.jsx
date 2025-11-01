@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Users, CreditCard, FileText, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { Users, CreditCard, FileText, CheckCircle, Clock, DollarSign, Mail, MousePointer, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { adminAPI } from '../../services/api';
+import axios from 'axios';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
 
@@ -10,9 +11,12 @@ function AdminDashboard() {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [emailAnalytics, setEmailAnalytics] = useState(null);
+  const [emailSummary, setEmailSummary] = useState(null);
 
   useEffect(() => {
     loadAdminData();
+    loadEmailAnalytics();
   }, []);
 
   const loadAdminData = async () => {
@@ -32,6 +36,25 @@ function AdminDashboard() {
       toast.error('Failed to load admin data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadEmailAnalytics = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const [analyticsRes, summaryRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/email-tracking/analytics', {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get('http://localhost:5000/api/email-tracking/summary', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
+      
+      setEmailAnalytics(analyticsRes.data.analytics);
+      setEmailSummary(summaryRes.data.summary);
+    } catch (error) {
+      console.error('❌ Load email analytics error:', error);
     }
   };
 
@@ -143,6 +166,16 @@ function AdminDashboard() {
             >
               Pending Payments ({pendingPayments.length})
             </button>
+            <button
+              onClick={() => setActiveTab('email-analytics')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'email-analytics'
+                  ? 'border-linkedin text-linkedin'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Email Analytics
+            </button>
           </div>
         </div>
 
@@ -249,6 +282,143 @@ function AdminDashboard() {
                 <div className="text-center py-12">
                   <CheckCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <p className="text-gray-600">No pending payments</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'email-analytics' && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-gray-900">Email Campaign Analytics</h3>
+
+              {/* Summary Cards */}
+              {emailSummary && (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm text-gray-600">Total Clicks</p>
+                      <Mail className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <p className="text-2xl font-bold text-blue-600">{emailSummary.allTime?.totalClicks || 0}</p>
+                    <p className="text-xs text-gray-500 mt-1">{emailSummary.allTime?.uniqueClicks || 0} unique</p>
+                  </div>
+
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm text-gray-600">Today</p>
+                      <TrendingUp className="w-5 h-5 text-green-600" />
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">{emailSummary.today?.totalClicks || 0}</p>
+                    <p className="text-xs text-gray-500 mt-1">{emailSummary.today?.uniqueClicks || 0} unique</p>
+                  </div>
+
+                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm text-gray-600">This Week</p>
+                      <MousePointer className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <p className="text-2xl font-bold text-purple-600">{emailSummary.thisWeek?.totalClicks || 0}</p>
+                    <p className="text-xs text-gray-500 mt-1">{emailSummary.thisWeek?.uniqueClicks || 0} unique</p>
+                  </div>
+
+                  <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm text-gray-600">This Month</p>
+                      <TrendingUp className="w-5 h-5 text-orange-600" />
+                    </div>
+                    <p className="text-2xl font-bold text-orange-600">{emailSummary.thisMonth?.totalClicks || 0}</p>
+                    <p className="text-xs text-gray-500 mt-1">{emailSummary.thisMonth?.uniqueClicks || 0} unique</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Analytics Details */}
+              {emailAnalytics && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Clicks by Device */}
+                  <div className="bg-white border rounded-lg p-5">
+                    <h4 className="font-semibold text-gray-900 mb-4">Clicks by Device</h4>
+                    {emailAnalytics.clicksByDevice && emailAnalytics.clicksByDevice.length > 0 ? (
+                      <div className="space-y-3">
+                        {emailAnalytics.clicksByDevice.map((device, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <span className="text-gray-700">{device._id || 'Unknown'}</span>
+                            <span className="font-semibold text-gray-900">{device.count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No data yet</p>
+                    )}
+                  </div>
+
+                  {/* Clicks by Browser */}
+                  <div className="bg-white border rounded-lg p-5">
+                    <h4 className="font-semibold text-gray-900 mb-4">Clicks by Browser</h4>
+                    {emailAnalytics.clicksByBrowser && emailAnalytics.clicksByBrowser.length > 0 ? (
+                      <div className="space-y-3">
+                        {emailAnalytics.clicksByBrowser.map((browser, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <span className="text-gray-700">{browser._id || 'Unknown'}</span>
+                            <span className="font-semibold text-gray-900">{browser.count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No data yet</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Top Clickers */}
+              {emailAnalytics?.topClickers && emailAnalytics.topClickers.length > 0 && (
+                <div className="bg-white border rounded-lg p-5">
+                  <h4 className="font-semibold text-gray-900 mb-4">Most Engaged Contacts</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="border-b">
+                        <tr>
+                          <th className="text-left py-3 px-2 text-sm font-semibold text-gray-700">Email</th>
+                          <th className="text-center py-3 px-2 text-sm font-semibold text-gray-700">Clicks</th>
+                          <th className="text-right py-3 px-2 text-sm font-semibold text-gray-700">Last Click</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {emailAnalytics.topClickers.map((clicker, index) => (
+                          <tr key={index} className="border-b last:border-0">
+                            <td className="py-3 px-2 text-sm text-gray-900">{clicker._id}</td>
+                            <td className="py-3 px-2 text-sm text-center font-semibold text-linkedin">{clicker.clicks}</td>
+                            <td className="py-3 px-2 text-sm text-right text-gray-600">
+                              {new Date(clicker.lastClick).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Recent Clicks */}
+              {emailAnalytics?.recentClicks && emailAnalytics.recentClicks.length > 0 && (
+                <div className="bg-white border rounded-lg p-5">
+                  <h4 className="font-semibold text-gray-900 mb-4">Recent Clicks</h4>
+                  <div className="space-y-3">
+                    {emailAnalytics.recentClicks.slice(0, 10).map((click, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">{click.email}</p>
+                          <p className="text-xs text-gray-500">
+                            {click.device} • {click.browser} • {click.os}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-600">{new Date(click.clickedAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
